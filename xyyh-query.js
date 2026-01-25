@@ -264,11 +264,11 @@ const stampData = [
     {"nickname": "嫩牛五方", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "蕃茄咪", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "冰原狼", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
-    {"nickname": "等你回答", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
+    {"nickname": "等風來", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "洛城", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "雨下", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "k哥", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
-    {"nickname": "羽若有約", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
+    {"nickname": "羽若有所約", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "張開懷抱", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "秋秋丸", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "湯湯", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
@@ -353,30 +353,25 @@ dataCount.textContent = stampData.length;
 // 完善简繁体转换映射
 const traditionalToSimplified = {
     // 常见繁体字转换
-    '寶': '宝', '貝': '贝', '體': '体', '會': '会',
-    '轉': '转', '總': '总', '樓': '楼', '魚': '鱼',
-    '樂': '乐', '夢': '梦', '漢': '汉', '語': '语',
-    '馬': '马', '來': '来', '國': '国', '愛': '爱',
-    '灣': '湾', '龍': '龙', '風': '风', '雲': '云',
-    '麼': '么', '為': '为', '兒': '儿', '學': '学',
-    '黨': '党', '聲': '声', '醫': '医', '業': '业',
-    '藝': '艺', '藥': '药', '車': '车', '東': '东',
-    '書': '书', '專': '专', '畫': '画', '話': '话',
-    '貿': '贸', '觀': '观', '顯': '显', '攝': '摄',
-    '製': '制', '壓': '压', '鹽': '盐', '藥': '药',
-    '醫': '医', '營': '营', '藝': '艺', '廳': '厅',
-    '後': '后', '乾': '干', '裡': '里', '麵': '面',
-    '剋': '克', '剋': '克', '嚮': '向', '迴': '回',
-    '餘': '余', '鍾': '钟', '裡': '里', '麵': '面',
-    '廣': '广', '廠': '厂', '廠': '厂', '廠': '厂',
-    '廠': '厂', '廠': '厂', '廠': '厂', '廠': '厂',
-    '廠': '厂', '廠': '厂', '廠': '厂', '廠': '厂',
-    '寶': '宝', '寶': '宝', '寶': '宝', '寶': '宝',
-    '錶': '表', '鍵': '键', '鐘': '钟', '麵': '面',
-    '麵': '面', '髮': '发', '髮': '发', '髮': '发',
-    '髮': '发', '髮': '发', '髮': '发', '髮': '发',
-    '髮': '发', '髮': '发', '髮': '发', '髮': '发',
-    '戶': '户'
+'轉' : '转', '戀' : '恋', '車' : '车', '語' : '语', '鰻' : '鳗',
+'魚' : '鱼', '開' : '开', '樓' : '楼', '餅' : '饼', '風' : '风',
+'涼' : '凉', '夢' : '梦', '樂' : '乐', '錚' : '铮', '煙' : '烟',
+'鎖' : '锁', '錯' : '错', '嵐' : '岚', '趙' : '赵', '時' : '时',
+'緬' : '缅', '龜' : '龟', '馬' : '马', '離' : '离', '腳' : '脚',
+'飼' : '饲', '燒' : '烧', '蝸' : '蜗', '爺' : '爷', '財' : '财',
+'撈' : '捞', '錦' : '锦', '蘆' : '芦', '執' : '执', '劉' : '刘',
+'飽' : '饱', '鈺' : '钰', '喪' : '丧', '潛' : '潜', '陽' : '阳',
+'盤' : '盘', '寧' : '宁', '蘿' : '萝', '蓋' : '盖', '達' : '达',
+'愛' : '爱', '孫' : '孙', '歡' : '欢', '廣' : '广', '頭' : '头',
+'羅' : '罗', '褲' : '裤', '純' : '纯', '無' : '无', '鷗' : '鸥',
+'護' : '护', '請' : '请', '緯' : '纬', '瑤' : '瑶', '頂' : '顶',
+'級' : '级', '間' : '间', '彈' : '弹', '麼' : '么', '與' : '与',
+'庫' : '库', '鯉' : '鲤', '醬' : '酱', '吳' : '吴', '彥' : '彦',
+'約' : '约', '張' : '张', '湯' : '汤', '楊' : '杨', '畫' : '画',
+'飛' : '飞', '農' : '农', '獲' : '获', '獅' : '狮', '攬' : '揽',
+'豬' : '猪', '盜' : '盗', '遺' : '遗', '寫' : '写', '閃' : '闪',
+'東' : '东', '銘' : '铭', '韓' : '韩', '輝' : '辉', '檸' : '柠',
+'隱' : '隐', '門' : '门', '燈' : '灯', '結' : '结', '長' : '长'
 };
 
 // 防止XSS攻击的函数
@@ -416,7 +411,7 @@ function searchUsers() {
     // 显示加载中
     resultsContainer.innerHTML = `
         <div class="loading">
-            <p>🔍 正在搜索 "${escapeHtml(nickname)}" ...</p>
+            <p>🔍 正在搜索 "${escapeHtml(toSimplified(nickname))}" ...</p>
         </div>
     `;
 
@@ -483,9 +478,11 @@ function displaySearchResults(results) {
     `;
 
     results.forEach(user => {
+        // 在显示结果时将昵称转换为简体
+        const simplifiedNickname = toSimplified(user.nickname);
         html += `
             <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')">
-                <strong>${escapeHtml(user.nickname)}</strong>
+                <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
                     印花数: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> 个 | 
                     本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span>
@@ -508,8 +505,8 @@ function showUserDetailByNickname(nickname) {
 
 // 显示用户详情
 function showUserDetail(user) {
-    // 更新界面
-    detailNickname.textContent = user.nickname;
+    // 显示简体字昵称
+    detailNickname.textContent = toSimplified(user.nickname);
 
     stampStats.innerHTML = `
         <div class="stat-item">
@@ -587,7 +584,9 @@ function toggleAdminSection() {
 
         for (let i = 0; i < Math.min(10, stampData.length); i++) {
             const user = stampData[i];
-            previewHtml += `${i+1}. ${escapeHtml(user.nickname)}: ${user.current_round_remaining}个<br>`;
+            // 在预览中显示简体字昵称
+            const simplifiedNickname = toSimplified(user.nickname);
+            previewHtml += `${i+1}. ${escapeHtml(simplifiedNickname)}: ${user.current_round_remaining}个<br>`;
         }
 
         if (stampData.length > 10) {
