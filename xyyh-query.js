@@ -373,7 +373,6 @@ const traditionalToSimplified = {
 '豬' : '猪', '盜' : '盗', '遺' : '遗', '寫' : '写', '銘' : '铭',
 '韓' : '韩', '輝' : '辉', '檸' : '柠', '門' : '门', '衛' : '卫',
 '結' : '结', '兒' : '儿'
-
 };
 
 // 防止XSS攻击的函数
@@ -405,6 +404,12 @@ function searchUsers() {
     if (nickname.length < 1) {
         showError('查询关键词至少需要1个字符');
         return;
+    }
+
+    // 隐藏提示文字
+    const tipsElement = document.querySelector('.tips');
+    if (tipsElement) {
+        tipsElement.style.display = 'none';
     }
 
     // 清除上一次的查询结果
@@ -616,6 +621,12 @@ closeDetail.addEventListener('click', () => {
             <p>输入昵称开始查询</p>
         </div>
     `;
+    
+    // 重新显示提示文字
+    const tipsElement = document.querySelector('.tips');
+    if (tipsElement) {
+        tipsElement.style.display = 'block';
+    }
 });
 
 adminToggle.addEventListener('click', toggleAdminSection);
@@ -633,6 +644,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>输入昵称开始查询</p>
                 </div>
             `;
+            
+            // 重新显示提示文字
+            const tipsElement = document.querySelector('.tips');
+            if (tipsElement) {
+                tipsElement.style.display = 'block';
+            }
         }
     });
 });
@@ -646,5 +663,3 @@ resultsContainer.innerHTML = `
         <p>请输入昵称</p>
     </div>
 `;
-
-
