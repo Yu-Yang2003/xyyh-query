@@ -18,8 +18,10 @@
                 <input type="text" 
                        class="search-input" 
                        placeholder="请输入昵称（支持简繁体）" 
-                       id="searchInput">
-                <button class="search-btn" id="searchBtn">查询</button>
+                       id="searchInput"
+                       autocomplete="off"
+                       spellcheck="false">
+                <button class="search-btn" id="searchBtn" aria-label="执行搜索">查询</button>
             </div>
             
             <div class="tips">
@@ -35,23 +37,15 @@
             <div class="user-detail" id="userDetail">
                 <div class="detail-header">
                     <h2 id="detailNickname"></h2>
-                    <button class="close-detail" id="closeDetail">×</button>
+                    <button class="close-detail" id="closeDetail" aria-label="关闭详情">×</button>
                 </div>
                 <div class="stamp-stats" id="stampStats">
                     <!-- 数据将动态加载 -->
                 </div>
             </div>
-        </div>
-        
-        <div class="admin-section" id="adminSection">
-            <h3>📊 数据管理</h3>
-            <div class="data-preview">
-                当前共 <span id="dataCount">0</span> 条用户数据
-            </div>
-        </div>
-        
+        </div>   
+    </div>
+
     <script src="xyyh-query.js"></script>
 </body>
 </html>
-
-
