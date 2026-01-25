@@ -339,12 +339,6 @@ const userDetail = document.getElementById('userDetail');
 const detailNickname = document.getElementById('detailNickname');
 const stampStats = document.getElementById('stampStats');
 const closeDetail = document.getElementById('closeDetail');
-const adminSection = document.getElementById('adminSection');
-const adminToggle = document.getElementById('adminToggle');
-const dataCount = document.getElementById('dataCount');
-
-// 初始化数据统计
-dataCount.textContent = stampData.length;
 
 // 完善简繁体转换映射
 const traditionalToSimplified = {
@@ -550,59 +544,6 @@ function showError(message) {
     `;
 }
 
-// 计算数据统计
-function calculateStatistics() {
-    const totalUsers = stampData.length;
-    const totalStamps = stampData.reduce((sum, user) => sum + user.current_round_remaining, 0);
-    const avgStamps = totalUsers > 0 ? (totalStamps / totalUsers).toFixed(2) : 0;
-    const maxStamps = Math.max(...stampData.map(user => user.current_round_remaining), 0);
-    const minStamps = Math.min(...stampData.map(user => user.current_round_remaining), 0);
-
-    return {
-        totalUsers,
-        totalStamps,
-        avgStamps,
-        maxStamps,
-        minStamps
-    };
-}
-
-// 切换管理面板
-function toggleAdminSection() {
-    const isVisible = adminSection.style.display === 'block';
-    adminSection.style.display = isVisible ? 'none' : 'block';
-    adminToggle.textContent = isVisible ? '显示数据管理' : '隐藏数据管理';
-
-    if (!isVisible) {
-        // 显示详细数据预览
-        const stats = calculateStatistics();
-        const preview = adminSection.querySelector('.data-preview');
-
-        let previewHtml = `
-            <strong>📊 数据统计概览</strong><br>
-            总用户数: <strong>${stats.totalUsers}</strong><br>
-            总印花数: <strong>${stats.totalStamps}</strong><br>
-            平均印花: <strong>${stats.avgStamps}</strong><br>
-            最高印花: <strong>${stats.maxStamps}</strong><br>
-            最低印花: <strong>${stats.minStamps}</strong><br><br>
-
-            <strong>📋 前10条数据预览:</strong><br>
-        `;
-
-        for (let i = 0; i < Math.min(10, stampData.length); i++) {
-            const user = stampData[i];
-            // 在预览中显示简体字昵称
-            const simplifiedNickname = toSimplified(user.nickname);
-            previewHtml += `${i+1}. ${escapeHtml(simplifiedNickname)}: ${user.current_round_remaining}个<br>`;
-        }
-
-        if (stampData.length > 10) {
-            previewHtml += `<br>... 还有${stampData.length - 10}条数据`;
-        }
-
-        preview.innerHTML = previewHtml;
-    }
-}
 
 // 事件监听
 searchBtn.addEventListener('click', searchUsers);
@@ -628,8 +569,6 @@ closeDetail.addEventListener('click', () => {
         tipsElement.style.display = 'block';
     }
 });
-
-adminToggle.addEventListener('click', toggleAdminSection);
 
 // 页面加载完成后自动聚焦到搜索框
 document.addEventListener('DOMContentLoaded', function() {
