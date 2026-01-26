@@ -144,6 +144,29 @@ body {
     transform: translateY(0);
 }
 
+/* 消费记录按钮 */
+.consume-btn {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    color: white;
+    border: none;
+    padding: 16px 25px;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+    min-width: 150px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.consume-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 154, 158, 0.4);
+}
+
 /* 提示文本 */
 .tips {
     background: linear-gradient(135deg, #e8f4ff 0%, #f0f8ff 100%);
@@ -271,6 +294,7 @@ body {
     text-align: center;
     transition: var(--transition);
     border: 1px solid #f0f0f0;
+    position: relative;
 }
 
 .stat-item:hover {
@@ -295,6 +319,57 @@ body {
     font-weight: bold;
     color: var(--primary-gradient-end);
     transition: var(--transition);
+    cursor: help;
+}
+
+/* 消费详情弹窗 */
+.consume-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    min-width: 200px;
+    padding: 15px;
+    font-size: 14px;
+}
+
+.consume-details-popup {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.consume-record {
+    margin-bottom: 8px;
+    padding: 5px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.consume-record:last-child {
+    border-bottom: none;
+}
+
+.consume-record .item {
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.consume-record .price {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.no-consume {
+    color: var(--light-text);
+    font-style: italic;
+    padding: 10px 0;
 }
 
 /* 状态指示器 */
@@ -404,6 +479,12 @@ body {
         min-width: auto;
     }
     
+    /* 消费记录按钮在小屏幕上的样式调整 */
+    .consume-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+    
     .results-section {
         padding: 0 20px 30px;
     }
@@ -418,6 +499,15 @@ body {
     
     .stat-value {
         font-size: 24px;
+    }
+    
+    .consume-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-width: 300px;
     }
 }
 
@@ -550,6 +640,20 @@ body {
     
     .header {
         background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    }
+    
+    .consume-popup {
+        background: #2d3748;
+        border-color: var(--border-color);
+        color: var(--dark-text);
+    }
+    
+    .consume-details-popup {
+        background: #4a5568;
+    }
+    
+    .consume-btn {
+        background: linear-gradient(135deg, #7876b1 0%, #9c88ff 100%);
     }
 }
 
