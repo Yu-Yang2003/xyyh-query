@@ -1,7 +1,7 @@
 // ==================== 印花数据现在从外部文件导入 ====================
 
 // 消费记录数据
-const consumeData = [
+/*const consumeData = [
     {id: 1, bidder: "peach", item: "印花定制贴纸", price: 50},
     {id: 2, bidder: "lucas", item: "专属徽章", price: 3},
     {id: 3, bidder: "啵啵", item: "限量版周边", price: 2},
@@ -34,7 +34,7 @@ function updateStampDataWithConsumeRecords() {
 }
 
 // 初始化时更新数据
-updateStampDataWithConsumeRecords();
+updateStampDataWithConsumeRecords();*/ //(记得恢复此功能时取消注释)
 
 // DOM元素
 const searchInput = document.getElementById('searchInput');
@@ -92,9 +92,9 @@ function toSimplified(text) {
 }
 
 // 获取用户的消费详情
-function getUserConsumeDetails(nickname) {
+/*function getUserConsumeDetails(nickname) {
     return consumeData.filter(record => record.bidder === nickname);
-}
+}*/
 
 // 搜索函数
 function searchUsers() {
@@ -122,7 +122,7 @@ function searchUsers() {
     // 显示加载中
     resultsContainer.innerHTML = `
         <div class="loading">
-            <p>🔍 正在搜索 "${escapeHtml(toSimplified(nickname))}" ...</p>
+            <p>🔍 正在搜索... "${escapeHtml(toSimplified(nickname))}" ...</p>
         </div>
     `;
 
@@ -219,24 +219,8 @@ function showUserDetail(user) {
     // 显示简体字昵称
     detailNickname.textContent = toSimplified(user.nickname);
 
-    // 获取该用户的消费详情
-    const userConsumeDetails = getUserConsumeDetails(user.nickname);
-    let consumeDetailsHtml = '';
-    
-    if (userConsumeDetails.length > 0) {
-        consumeDetailsHtml = `<div class="consume-details-popup">`;
-        userConsumeDetails.forEach(record => {
-            consumeDetailsHtml += `
-                <div class="consume-record">
-                    <span class="item">${record.item}</span> - 
-                    <span class="price">${record.price} 印花</span>
-                </div>
-            `;
-        });
-        consumeDetailsHtml += `</div>`;
-    } else {
-        consumeDetailsHtml = `<div class="no-consume">暂无消费记录</div>`;
-    }
+    // 设置为空字符串，因为拍卖相关功能已注释
+    const consumeDetailsHtml = '';
 
     stampStats.innerHTML = `
         <div class="stat-item">
@@ -247,15 +231,10 @@ function showUserDetail(user) {
             <div class="stat-label">本轮获得印花</div>
             <div class="stat-value" style="color: #4CAF50;">+${user.current_round_earned}</div>
         </div>
-        <div class="stat-item" style="position: relative;">
+      <div class="stat-item" style="position: relative;">
             <div class="stat-label">本轮消费印花</div>
-            <div class="stat-value" style="color: #ff6b6b;" 
-                 onmouseover="showConsumePopup(this)" 
-                 onmouseout="hideConsumePopup(this)">
+            <div class="stat-value" style="color: #ff6b6b;">
                 -${user.current_round_used}
-                <div class="consume-popup" style="display: none;">
-                    ${consumeDetailsHtml}
-                </div>
             </div>
         </div>
         <div class="stat-item" style="background: #f0f7ff;">
@@ -271,21 +250,21 @@ function showUserDetail(user) {
     resultsContainer.innerHTML = '';
 }
 
-// 显示消费详情弹窗
-function showConsumePopup(element) {
+// 显示消费详情弹窗(记得恢复此功能时取消注释)
+/*function showConsumePopup(element) {
     const popup = element.querySelector('.consume-popup');
     if (popup) {
         popup.style.display = 'block';
     }
 }
 
-// 隐藏消费详情弹窗
+// 隐藏消费详情弹窗(记得恢复此功能时取消注释)
 function hideConsumePopup(element) {
     const popup = element.querySelector('.consume-popup');
     if (popup) {
         popup.style.display = 'none';
     }
-}
+}*/
 
 // 显示错误
 function showError(message) {
@@ -353,8 +332,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 将函数暴露给全局作用域，供onclick使用
 window.showUserDetailByNickname = showUserDetailByNickname;
-window.showConsumePopup = showConsumePopup;
-window.hideConsumePopup = hideConsumePopup;
+//window.showConsumePopup = showConsumePopup;  //(记得恢复此功能时取消注释)
+//window.hideConsumePopup = hideConsumePopup;  //(记得恢复此功能时取消注释)
 
 // 初始状态
 resultsContainer.innerHTML = `
