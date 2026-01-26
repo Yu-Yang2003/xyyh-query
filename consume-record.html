@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小雨印花消费记录</title>
+    <link rel="stylesheet" href="xyyh-query.css">
+    <style>
+        /* 专门用于消费记录页面的样式 */
+        .consume-table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        .consume-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .consume-table th,
+        .consume-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .consume-table th {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .consume-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .consume-table tr:hover {
+            background-color: #f0f7ff;
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .consume-table .index-cell {
+            font-weight: bold;
+            color: var(--primary-gradient-end);
+            text-align: center;
+        }
+
+        .consume-table .bidder-cell {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .consume-table .item-cell {
+            color: var(--info-color);
+        }
+
+        .consume-table .price-cell {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏷️ 小雨印花消费记录</h1>
+            <p>本轮印花统计时间段：2025年11月 ~ 2025年12月</p>
+        </div>
+        
+        <div class="main-content" style="padding: 30px;">
+            <h2 style="text-align: center; margin-bottom: 30px; color: var(--dark-text);">竞拍消费明细</h2>
+            
+            <div class="consume-table-container">
+                <table class="consume-table">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>竞拍成功者</th>
+                            <th>拍品内容</th>
+                            <th>最终成交价</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consumeTableBody">
+                        <!-- 消费记录将动态加载 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="index.html" class="back-btn">
+                    <span>←</span> 返回查询页面
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入印花数据文件 -->
+    <script src="xyyh-data.js"></script>
+    <script>
+        // 消费记录数据
+        const consumeData = [
+    {id: 1, bidder: "peach", item: "印花定制贴纸", price: 50},
+    {id: 2, bidder: "lucas", item: "专属徽章", price: 3},
+    {id: 3, bidder: "啵啵", item: "限量版周边", price: 2},
+    {id: 4, bidder: "pa寶", item: "精美相册", price: 4},
+    {id: 5, bidder: "路人甲乙丙丁", item: "定制书签", price: 5},
+    {id: 6, bidder: "羽羊", item: "粉红花花单人拍立得", price: 9},
+    {id: 7, bidder: "用戶91063", item: "小卡妆造单人拍立得", price: 5}
+        ];
+
+        // 显示消费记录表格
+        function displayConsumeTable() {
+            const consumeTableBody = document.getElementById('consumeTableBody');
+            
+            if (consumeData.length === 0) {
+                consumeTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #888;">暂无消费记录</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            let html = '';
+            consumeData.forEach(record => {
+                html += `
+                    <tr>
+                        <td class="index-cell">${record.id}</td>
+                        <td class="bidder-cell">${escapeHtml(toSimplified(record.bidder))}</td>
+                        <td class="item-cell">${escapeHtml(record.item)}</td>
+                        <td class="price-cell">${record.price}</td>
+                    </tr>
+                `;
+            });
+            consumeTableBody.innerHTML = html;
+        }
+
+        // 防止XSS攻击的函数
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // 简繁体转换函数
+        function toSimplified(text) {
+            const traditionalToSimplified = {
+                '寶' : '宝', '戀' : '恋', '樓' : '楼', '總' : '总', '轉' : '转',
+                '戶' : '户', '鰻' : '鳗', '魚' : '鱼', '語' : '语', '風' : '风',
+                '爭' : '争', '嵐' : '岚', '鎖' : '锁', '樂' : '乐', '開' : '开',
+                '涼' : '凉', '淺' : '浅', '夢' : '梦', '蝸' : '蜗', '車' : '车',
+                '錚' : '铮', '餅' : '饼', '羅' : '罗', '師' : '师', '趙' : '赵',
+                '歡' : '欢', '個' : '个', '撈' : '捞', '錦' : '锦', '時' : '时',
+                '孫' : '孙', '爺' : '爷', '盤' : '盘', '閃' : '闪', '貓' : '猫',
+                '財' : '财', '蘆' : '芦', '藍' : '蓝', '劉' : '刘', '陽' : '阳',
+                '醬' : '酱', '請' : '请', '執' : '执', '蘿' : '萝', '頂' : '顶',
+                '級' : '级', '庫' : '库', '飽' : '饱', '燒' : '烧', '馬' : '马',
+                '鈴' : '铃', '潛' : '潜', '龍' : '龙', '廣' : '广', '東' : '东',
+                '頭' : '头', '緬' : '缅', '寧' : '宁', '瑤' : '瑶', '吳' : '吴',
+                '彥' : '彦', '獅' : '狮', '腳' : '脚', '飼' : '饲', '喪' : '丧',
+                '錯' : '错', '褲' : '裤', '無' : '无', '尋' : '寻', '龜' : '龟',
+                '鈺' : '钰', '緯' : '纬', '間' : '间', '麼' : '么', '鯉' : '鲤',
+                '畫' : '画', '長' : '长', '紅' : '红', '蓋' : '盖', '澆' : '浇',
+                '達' : '达', '愛' : '爱', '純' : '纯', '團' : '团', '鷗' : '鸥',
+                '護' : '护', '導' : '导', '彈' : '弹', '與' : '与', '離' : '离',
+                '約' : '约', '張' : '张', '懷' : '怀', '湯' : '汤', '楊' : '杨',
+                '學' : '学', '飛' : '飞', '農' : '农', '獲' : '获', '獎' : '奖',
+                '電' : '电', '熱' : '热', '凱' : '凯', '隱' : '隐', '攬' : '揽',
+                '豬' : '猪', '盜' : '盗', '遺' : '遗', '寫' : '写', '銘' : '铭',
+                '韓' : '韩', '輝' : '辉', '檸' : '柠', '門' : '门', '衛' : '卫',
+                '結' : '结', '兒' : '儿'
+            };
+            
+            return text.split('').map(char => traditionalToSimplified[char] || char).join('');
+        }
+
+        // 页面加载完成后显示消费记录
+        document.addEventListener('DOMContentLoaded', function() {
+            displayConsumeTable();
+        });
+    </script>
+</body>
+</html>
