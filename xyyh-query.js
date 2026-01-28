@@ -2,13 +2,13 @@
 
 // 消费记录数据
 /*const consumeData = [
-    {id: 1, bidder: "peach", item: "印花定制贴纸", price: 50},
-    {id: 2, bidder: "lucas", item: "专属徽章", price: 3},
-    {id: 3, bidder: "啵啵", item: "限量版周边", price: 2},
-    {id: 4, bidder: "pa寶", item: "精美相册", price: 4},
-    {id: 5, bidder: "路人甲乙丙丁", item: "定制书签", price: 5},
-    {id: 6, bidder: "羽羊", item: "粉红花花单人拍立得", price: 9},
-    {id: 7, bidder: "用戶91063", item: "小卡妆造单人拍立得", price: 5}
+    {bidder: "peach", item: "印花定制贴纸", price: 50},
+    {bidder: "lucas", item: "专属徽章", price: 3},
+    {bidder: "啵啵", item: "限量版周边", price: 2},
+    {bidder: "pa寶", item: "精美相册", price: 4},
+    {bidder: "路人甲乙丙丁", item: "定制书签", price: 5},
+    {bidder: "羽羊", item: "粉红花花单人拍立得", price: 9},
+    {bidder: "用戶91063", item: "小卡妆造单人拍立得", price: 5}
 ];
 
 // 更新印花数据中的消费记录

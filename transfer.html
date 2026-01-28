@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据格式转换工具</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section, .output-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .input-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .input-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .upload-section, .manual-input-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #ddd;
+        }
+
+        .upload-section label {
+            display: block;
+            text-align: center;
+            padding: 15px;
+            background: #6c757d;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .upload-section label:hover {
+            background: #5a6268;
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .preview {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .manual-input {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .manual-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .convert-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .convert-btn:active {
+            transform: translateY(0);
+        }
+
+        .output-area {
+            width: 100%;
+            height: 400px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f8f9fa;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+
+        .output-area:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+
+        .instructions h3 {
+            margin: 0 0 10px 0;
+            color: #007bff;
+        }
+
+        .instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .format-example {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            color: #856404;
+            margin-top: 10px;
+        }
+
+        .status-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏷️ 数据格式转换工具</h1>
+            <p>将文本内容转换为 {bidder: "", item: "", price: } 格式</p>
+        </div>
+
+        <div class="content">
+            <div class="instructions">
+                <h3>使用说明：</h3>
+                <ul>
+                    <li>支持两种输入方式：上传TXT文件或手动输入</li>
+                    <li>输入格式：每行包含三部分内容，用空格或其他分隔符分隔</li>
+                    <li>例如：在下風箏最高  玩偶  3</li>
+                    <li>将转换为：{bidder: "在下風箏最高", item: "玩偶", price: 3}</li>
+                </ul>
+                <div class="format-example">
+                    输入格式：用户名 商品名称 价格<br>
+                    输出格式：{bidder: "用户名", item: "商品名称", price: 价格},
+                </div>
+            </div>
+
+            <div class="input-section">
+                <h3 class="section-title">输入数据</h3>
+                <div class="input-area">
+                    <div class="upload-section">
+                        <label for="fileInput">📁 选择TXT文件</label>
+                        <input type="file" id="fileInput" accept=".txt">
+                        <div class="preview" id="filePreview">未选择文件</div>
+                    </div>
+
+                    <div class="manual-input-section">
+                        <textarea 
+                            class="manual-input" 
+                            id="manualInput" 
+                            placeholder="在此手动输入数据，每行一条记录，格式如：用户名 商品名称 价格&#10;例如：&#10;在下風箏最高 玩偶 3&#10;peach 印花定制贴纸 50"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="convert-btn" id="convertBtn">🔄 转换数据</button>
+            </div>
+
+            <div class="output-section">
+                <h3 class="section-title">转换结果</h3>
+                <div class="status-message" id="statusMessage"></div>
+                <textarea class="output-area" id="outputArea" readonly></textarea>
+                <button class="copy-btn" id="copyBtn">📋 复制结果</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const manualInput = document.getElementById('manualInput');
+            const convertBtn = document.getElementById('convertBtn');
+            const outputArea = document.getElementById('outputArea');
+            const copyBtn = document.getElementById('copyBtn');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // 文件选择预览
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const content = e.target.result;
+                        filePreview.textContent = content.substring(0, 200) + (content.length > 200 ? '...' : '');
+                        filePreview.title = content;
+                        
+                        // 同时填充到手动输入框
+                        manualInput.value = content;
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            // 转换数据
+            convertBtn.addEventListener('click', function() {
+                try {
+                    // 获取输入内容
+                    const inputText = manualInput.value.trim();
+                    
+                    if (!inputText) {
+                        showStatus('请先输入数据', 'error');
+                        return;
+                    }
+
+                    // 按行分割
+                    const lines = inputText.split('\n').filter(line => line.trim() !== '');
+                    const results = [];
+
+                    lines.forEach((line, index) => {
+                        const trimmedLine = line.trim();
+                        if (!trimmedLine) return;
+
+                        // 使用正则表达式分割，匹配一个或多个空白字符
+                        const parts = trimmedLine.split(/\s+/);
+                        
+                        if (parts.length >= 3) {
+                            // 假设最后一部分是价格
+                            const priceStr = parts[parts.length - 1];
+                            const price = parseInt(priceStr);
+                            
+                            if (isNaN(price)) {
+                                throw new Error(`第 ${index + 1} 行的价格无效: "${priceStr}"`);
+                            }
+
+                            // 用户名是第一部分
+                            const bidder = parts[0];
+                            
+                            // 商品名称是中间部分
+                            const itemParts = parts.slice(1, -1);
+                            const item = itemParts.join(' ');
+
+                            results.push(`{bidder: "${bidder}", item: "${item}", price: ${price}}`);
+                        } else {
+                            throw new Error(`第 ${index + 1} 行格式错误: "${trimmedLine}"`);
+                        }
+                    });
+
+                    outputArea.value = results.join(',\n');
+                    showStatus(`成功转换 ${results.length} 条记录`, 'success');
+                } catch (error) {
+                    showStatus(`转换失败: ${error.message}`, 'error');
+                    outputArea.value = '';
+                }
+            });
+
+            // 复制结果
+            copyBtn.addEventListener('click', function() {
+                if (outputArea.value.trim()) {
+                    outputArea.select();
+                    document.execCommand('copy');
+                    
+                    // 显示复制成功的提示
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '✅ 已复制';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                }
+            });
+
+            // 显示状态消息
+            function showStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message';
+                
+                if (type === 'success') {
+                    statusMessage.classList.add('status-success');
+                } else {
+                    statusMessage.classList.add('status-error');
+                }
+                
+                statusMessage.style.display = 'block';
+                
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

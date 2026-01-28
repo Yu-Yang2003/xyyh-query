@@ -10,21 +10,19 @@
         .consume-table-container {
             margin-top: 30px;
             overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
         .consume-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
         .consume-table th,
         .consume-table td {
-            padding: 15px;
+            padding: 16px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
         }
@@ -35,37 +33,47 @@
             font-weight: 600;
             position: sticky;
             top: 0;
+            z-index: 10;
+            text-align: center; /* 表头文字居中 */
         }
 
-        .consume-table tr:nth-child(even) {
+        .consume-table tbody tr:nth-child(even) {
             background-color: #f8f9fa;
         }
 
-        .consume-table tr:hover {
+        .consume-table tbody tr:hover {
             background-color: #f0f7ff;
             transform: scale(1.01);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: var(--transition);
+            transition: all 0.2s ease;
+            z-index: 5;
         }
 
         .consume-table .index-cell {
             font-weight: bold;
             color: var(--primary-gradient-end);
             text-align: center;
+            width: 60px;
         }
 
         .consume-table .bidder-cell {
             color: var(--success-color);
             font-weight: 600;
+            max-width: 150px;
+            word-break: break-word;
         }
 
         .consume-table .item-cell {
             color: var(--info-color);
+            max-width: 250px;
+            word-break: break-word;
         }
 
         .consume-table .price-cell {
             color: var(--accent-color);
             font-weight: bold;
+            width: 80px;
+            text-align: center;
         }
 
         .back-btn {
@@ -77,17 +85,218 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: var(--transition);
-            margin-top: 20px;
+            transition: all 0.3s ease;
+            margin-top: 30px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .back-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .pagination button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .pagination .page-info {
+            font-size: 15px;
+            color: var(--dark-text);
+            min-width: 150px;
+            text-align: center;
+            font-weight: 500;
+            margin: 0 15px;
+        }
+
+        .pagination .page-numbers {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pagination .page-number {
+            background: #e9ecef;
+            color: var(--dark-text);
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .pagination .page-number.active {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .pagination .page-number:hover:not(.active) {
+            background: #dde1e4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* 提示信息样式 */
+        .disclaimer {
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 15px;
+            color: #6c757d;
+            border-left: 5px solid #6c757d;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            line-height: 1.6;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px !important;
+            }
+            
+            .consume-table th,
+            .consume-table td {
+                padding: 12px 10px;
+                font-size: 14px;
+            }
+            
+            .consume-table .item-cell {
+                max-width: 150px;
+            }
+            
+            .pagination {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .pagination .page-numbers {
+                order: 3;
+                justify-content: center;
+            }
+            
+            .pagination .page-info {
+                order: 2;
+                margin: 10px 0;
+            }
+            
+            .disclaimer {
+                font-size: 14px;
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .consume-table th,
+            .consume-table td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+            
+            .consume-table .item-cell {
+                max-width: 120px;
+            }
+            
+            .pagination button,
+            .pagination .page-number {
+                padding: 8px 12px;
+                min-width: 38px;
+                height: 38px;
+                font-size: 14px;
+            }
+        }
+        
+        /* 时间段选择器样式 - 已修正 */
+        .time-period-selector {
+            margin-top: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .time-period-selector label {
+            font-weight: 600;
+            color: var(--dark-text);
+            white-space: nowrap;
+        }
+        
+        .time-period-selector select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #ced4da;
+            background-color: white;
+            font-size: 15px;
+            min-width: 250px;
+            height: 44px;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .time-period-selector select:focus {
+            border-color: var(--primary-gradient-start);
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.25);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
         }
     </style>
 </head>
@@ -95,20 +304,24 @@
     <div class="container">
         <div class="header">
             <h1>🏷️ 小雨印花消费记录</h1>
-            <p>本轮印花统计时间段：2025年11月 ~ 2025年12月</p>
         </div>
-        
+            <div class="time-period-selector">
+                <label for="periodSelect">选择时间段：</label>
+                <select id="periodSelect" onchange="changePeriod()">
+                    <!-- 时段选项将通过JavaScript动态生成 -->
+                </select>
+            </div>        
         <div class="main-content" style="padding: 30px;">
-            <h2 style="text-align: center; margin-bottom: 30px; color: var(--dark-text);">竞拍消费明细</h2>
+            <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 30px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
             
             <div class="consume-table-container">
                 <table class="consume-table">
                     <thead>
                         <tr>
-                            <th>序号</th>
-                            <th>竞拍成功者</th>
-                            <th>拍品内容</th>
-                            <th>最终成交价</th>
+                            <th class="index-cell" style="min-width: 80px;">序号</th>
+                            <th class="bidder-cell" style="min-width: 150px;">竞拍成功者</th>
+                            <th class="item-cell" style="min-width: 200px;">拍品内容</th>
+                            <th class="price-cell" style="min-width: 100px;">最终成交价</th>
                         </tr>
                     </thead>
                     <tbody id="consumeTableBody">
@@ -117,7 +330,17 @@
                 </table>
             </div>
             
-            <div style="text-align: center; margin-top: 30px;">
+            <!-- 分页控件 -->
+            <div id="paginationContainer" class="pagination" style="display: none;">
+                <button id="prevPage" title="上一页">←</button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button id="nextPage" title="下一页">→</button>
+                <div class="page-info" id="pageInfo"></div>
+            </div>
+            <div class="disclaimer">
+                本表格仅统计拍卖会时的拍品情况，如需交换拍品请联系房管，此表格不进行交换
+            </div>            
+            <div style="text-align: center; margin-top: 20px;">
                 <a href="index.html" class="back-btn">
                     <span>←</span> 返回查询页面
                 </a>
@@ -125,38 +348,76 @@
         </div>
     </div>
 
-    <!-- 引入印花数据文件 -->
-    <script src="xyyh-data.js"></script>
+    <!-- 引入消费记录数据文件 -->
+    <script src="xyyh-consume-data.js"></script>
     <script>
-        // 消费记录数据
-        const consumeData = [
-    {id: 1, bidder: "peach", item: "印花定制贴纸", price: 50},
-    {id: 2, bidder: "lucas", item: "专属徽章", price: 3},
-    {id: 3, bidder: "啵啵", item: "限量版周边", price: 2},
-    {id: 4, bidder: "pa寶", item: "精美相册", price: 4},
-    {id: 5, bidder: "路人甲乙丙丁", item: "定制书签", price: 5},
-    {id: 6, bidder: "羽羊", item: "粉红花花单人拍立得", price: 9},
-    {id: 7, bidder: "用戶91063", item: "小卡妆造单人拍立得", price: 5}
-        ];
+        // 当前选中的时间段
+        let currentPeriod = ConsumeDataManager.getDefaultPeriod();
+        // 分页相关变量
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        let totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
 
-        // 显示消费记录表格
-        function displayConsumeTable() {
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            populatePeriodSelector();
+            displayConsumeTable(currentPage);
+            renderPagination();
+            
+            // 绑定分页按钮事件
+            document.getElementById('prevPage').addEventListener('click', prevPage);
+            document.getElementById('nextPage').addEventListener('click', nextPage);
+        });
+
+        // 填充时间段选择器
+        function populatePeriodSelector() {
+            const periodSelect = document.getElementById('periodSelect');
+            const periods = ConsumeDataManager.getPeriods();
+            
+            periods.forEach(period => {
+                const option = document.createElement('option');
+                option.value = period;
+                option.textContent = period;
+                if (period === currentPeriod) {
+                    option.selected = true;
+                }
+                periodSelect.appendChild(option);
+            });
+        }
+
+        // 切换时间段
+        function changePeriod() {
+            currentPeriod = document.getElementById('periodSelect').value;
+            currentPage = 1;
+            totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
+            document.getElementById('currentPeriodTitle').textContent = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'}`;
+            displayConsumeTable(currentPage);
+            renderPagination();
+        }
+
+        // 显示消费记录表格（带分页）
+        function displayConsumeTable(page = 1) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = ConsumeDataManager.getDataByPeriod(currentPeriod).slice(startIndex, endIndex);
+            
             const consumeTableBody = document.getElementById('consumeTableBody');
             
-            if (consumeData.length === 0) {
+            if (pageData.length === 0) {
                 consumeTableBody.innerHTML = `
                     <tr>
-                        <td colspan="4" style="text-align: center; color: #888;">暂无消费记录</td>
+                        <td colspan="4" style="text-align: center; color: #888; padding: 40px;">暂无消费记录</td>
                     </tr>
                 `;
                 return;
             }
 
             let html = '';
-            consumeData.forEach(record => {
+            pageData.forEach((record, index) => {
+                const globalIndex = startIndex + index + 1; // 全局序号
                 html += `
                     <tr>
-                        <td class="index-cell">${record.id}</td>
+                        <td class="index-cell">${globalIndex}</td>
                         <td class="bidder-cell">${escapeHtml(toSimplified(record.bidder))}</td>
                         <td class="item-cell">${escapeHtml(record.item)}</td>
                         <td class="price-cell">${record.price}</td>
@@ -164,6 +425,67 @@
                 `;
             });
             consumeTableBody.innerHTML = html;
+        }
+
+        // 生成分页控件
+        function renderPagination() {
+            const paginationContainer = document.getElementById('paginationContainer');
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            const pageInfo = document.getElementById('pageInfo');
+            
+            // 如果当前时段没有数据，则隐藏分页
+            if (!ConsumeDataManager.getDataByPeriod(currentPeriod) || ConsumeDataManager.getDataByPeriod(currentPeriod).length === 0) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            // 显示分页容器
+            paginationContainer.style.display = 'flex';
+            
+            // 更新按钮状态
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
+            
+            // 更新页面信息
+            pageInfo.textContent = `第 ${currentPage} 页，共 ${totalPages} 页`;
+            
+            // 生成页码按钮
+            pageNumbersContainer.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const pageNumber = document.createElement('button');
+                pageNumber.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                pageNumber.textContent = i;
+                pageNumber.onclick = () => goToPage(i);
+                pageNumbersContainer.appendChild(pageNumber);
+            }
+        }
+
+        // 跳转到指定页
+        function goToPage(page) {
+            if (page < 1 || page > totalPages || page === currentPage) return;
+            currentPage = page;
+            displayConsumeTable(currentPage);
+            renderPagination();
+        }
+
+        // 上一页
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayConsumeTable(currentPage);
+                renderPagination();
+            }
+        }
+
+        // 下一页
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayConsumeTable(currentPage);
+                renderPagination();
+            }
         }
 
         // 防止XSS攻击的函数
@@ -210,10 +532,31 @@
             return text.split('').map(char => traditionalToSimplified[char] || char).join('');
         }
 
-        // 页面加载完成后显示消费记录
-        document.addEventListener('DOMContentLoaded', function() {
-            displayConsumeTable();
-        });
+        // 添加新时间段的数据（用于维护）
+        function addNewPeriod(periodName, data) {
+            if (ConsumeDataManager.addPeriod(periodName, data)) {
+                // 重新渲染选择器以包含新的时间段
+                const periodSelect = document.getElementById('periodSelect');
+                const option = document.createElement('option');
+                option.value = periodName;
+                option.textContent = periodName;
+                periodSelect.appendChild(option);
+            }
+        }
+
+        // 向现有时间段添加新数据
+        function addNewRecords(periodName, newRecords) {
+            if (ConsumeDataManager.addRecordsToPeriod(periodName, newRecords)) {
+                // 如果当前显示的就是这个时间段，则刷新显示
+                if (currentPeriod === periodName) {
+                    totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
+                    renderPagination();
+                }
+            } else {
+                console.error(`时间段 "${periodName}" 不存在`);
+            }
+        }
     </script>
+
 </body>
 </html>
