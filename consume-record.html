@@ -37,6 +37,10 @@
             text-align: center; /* 表头文字居中 */
         }
 
+        .consume-table tbody tr {
+            background-color: white;
+        }
+
         .consume-table tbody tr:nth-child(even) {
             background-color: #f8f9fa;
         }
@@ -161,7 +165,7 @@
         .pagination .page-number {
             background: #e9ecef;
             color: var(--dark-text);
-            border: none;
+            border: 1px solid #ced4da;
             padding: 10px 14px;
             border-radius: 8px;
             cursor: pointer;
@@ -176,16 +180,83 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        /* 深色模式下分页数字更明显的样式 */
         .pagination .page-number.active {
             background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
             color: white;
             font-weight: 600;
+            border: none;
         }
 
         .pagination .page-number:hover:not(.active) {
             background: #dde1e4;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            color: var(--dark-text);
+        }
+        
+        /* 深色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            .pagination .page-number {
+                background: #495057;
+                color: #f8f9fa;
+                border: 1px solid #6c757d;
+            }
+            
+            .pagination .page-number:hover:not(.active) {
+                background: #5a6268;
+                color: white;
+            }
+            
+            .pagination .page-number.active {
+                background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+                color: white;
+                border: none;
+            }
+            
+            .pagination button {
+                background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+                color: white;
+            }
+            
+            .pagination button:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+            
+            .consume-table th {
+                background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+                color: white;
+            }
+            
+            .consume-table tbody tr {
+                background-color: #343a40;
+                color: #f8f9fa;
+            }
+            
+            .consume-table tbody tr:nth-child(even) {
+                background-color: #343a40; /* 与奇数行保持一致 */
+            }
+            
+            .consume-table tbody tr:hover {
+                background-color: #212529;
+            }
+            
+            .consume-table td {
+                border-bottom: 1px solid #6c757d;
+            }
+            
+            .consume-table .bidder-cell {
+                color: #20c997; /* 深色模式下使用更亮的成功色 */
+            }
+            
+            .consume-table .item-cell {
+                color: #17a2b8; /* 深色模式下使用更亮的信息色 */
+            }
+            
+            .consume-table .price-cell {
+                color: #fd7e14; /* 深色模式下使用更亮的强调色 */
+            }
         }
         
         /* 提示信息样式 */
@@ -259,7 +330,7 @@
             }
         }
         
-        /* 时间段选择器样式 - 已修正 */
+        /* 时间段选择器样式 - 移动到主内容区域 */
         .time-period-selector {
             margin-top: 15px;
             text-align: center;
@@ -268,6 +339,7 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
+            margin-bottom: 20px;
         }
         
         .time-period-selector label {
@@ -305,13 +377,15 @@
         <div class="header">
             <h1>🏷️ 小雨印花消费记录</h1>
         </div>
+        
+        <div class="main-content" style="padding: 30px;">
             <div class="time-period-selector">
                 <label for="periodSelect">选择时间段：</label>
                 <select id="periodSelect" onchange="changePeriod()">
                     <!-- 时段选项将通过JavaScript动态生成 -->
                 </select>
-            </div>        
-        <div class="main-content" style="padding: 30px;">
+            </div>
+            
             <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 30px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
             
             <div class="consume-table-container">
