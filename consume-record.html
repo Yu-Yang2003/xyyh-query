@@ -282,19 +282,20 @@
                 font-size: 12px;
             }
             
+            /* 修改分页样式，在手机端保持一行显示 */
             .pagination {
-                flex-direction: column;
-                gap: 12px;
+                flex-direction: row;
+                gap: 6px;
             }
             
             .pagination .page-numbers {
-                order: 3;
+                order: unset;
                 justify-content: center;
             }
             
             .pagination .page-info {
-                order: 2;
-                margin: 8px 0;
+                order: unset;
+                margin: 0 8px;
                 font-size: 13px;
                 min-width: 90px;
             }
