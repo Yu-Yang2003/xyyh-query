@@ -243,13 +243,16 @@ function displaySearchResults(results) {
     results.forEach(user => {
         // 在显示结果时将昵称转换为简体
         const simplifiedNickname = toSimplified(user.nickname);
-       html += `
+        // 计算消费占比，避免除零错误
+        const consumptionRatio = user.current_round_earned > 0 ? ((user.current_round_used / user.current_round_earned) * 100).toFixed(1) : 0;
+        html += `
             <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
                     剩余印花: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
                     本轮消费: <span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span> |
                     本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span> |
+                    消费率: <span style="color: ${consumptionRatio > 50 ? '#ff6b6b' : '#4CAF50'};">${consumptionRatio}%</span>
                 </div>
             </li>
         `;
@@ -408,5 +411,4 @@ resultsContainer.innerHTML = `
     <div class="empty">
         <p>请输入昵称</p>
     </div>
-
 `;
