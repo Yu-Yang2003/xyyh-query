@@ -10,7 +10,7 @@
     <div class="container">
         <div class="header">
             <h1>🏷️ 小雨印花查询系统</h1>
-            <p>当前统计时间段：2025年9月 ~ 2025年10月</p>
+            <p>当前统计时间段：2025年11月 ~ 2025年12月</p>
         </div>
         <div class="search-section">
             <div class="search-box">
@@ -19,7 +19,8 @@
                        placeholder="请输入昵称（支持简繁体）" 
                        id="searchInput"
                        autocomplete="off"
-                       spellcheck="false">
+                       spellcheck="false"
+                       aria-label="输入要查询的昵称">
                 <button class="search-btn" id="searchBtn" aria-label="执行搜索">查询</button>
             </div> 
             <div class="tips">
@@ -27,12 +28,12 @@
             </div>
         </div>
         <div class="results-section">
-            <div id="resultsContainer">
+            <div id="resultsContainer" role="region" aria-live="polite">
                 <!-- 结果将动态加载到这里 -->
             </div>
-            <div class="user-detail" id="userDetail">
+            <div class="user-detail" id="userDetail" aria-hidden="true">
                 <div class="detail-header">
-                    <h2 id="detailNickname"></h2>
+                    <h2 id="detailNickname" tabindex="0"></h2>
                     <button class="close-detail" id="closeDetail" aria-label="关闭详情">×</button>
                 </div>
                 <div class="stamp-stats" id="stampStats">
@@ -41,7 +42,7 @@
             </div>
         </div>  
         <div id="consumeBtnContainer" style="text-align: center; margin-top: 15px;">
-                <a href="consume-record.html" class="consume-btn" >查看拍卖消费记录</a>
+                <a href="consume-record.html" class="consume-btn" aria-label="查看拍卖消费记录">查看拍卖消费记录</a>
             </div>  
     </div>
     <!-- 引入印花数据文件 -->

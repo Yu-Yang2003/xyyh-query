@@ -46,6 +46,19 @@ const stampStats = document.getElementById('stampStats');
 const closeDetail = document.getElementById('closeDetail');
 const consumeBtnContainer = document.getElementById('consumeBtnContainer'); // 拍卖记录按钮容器
 
+// 防抖函数
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // 完善简繁体转换映射
 const traditionalToSimplified = {
     // 常见繁体字转换
@@ -77,6 +90,9 @@ const traditionalToSimplified = {
 
 // 防止XSS攻击的函数
 function escapeHtml(text) {
+    if(typeof text !== 'string') {
+        return '';
+    }
     const map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -84,11 +100,14 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return text.replace(/[&<>"']/g, m => map[m] || m);
 }
 
 // 简繁体转换函数
 function toSimplified(text) {
+    if(typeof text !== 'string') {
+        return '';
+    }
     return text.split('').map(char => traditionalToSimplified[char] || char).join('');
 }
 
@@ -162,6 +181,12 @@ function searchUsers() {
         return;
     }
 
+    // 验证输入是否包含潜在危险字符
+    if (/[<>'"&]/.test(nickname)) {
+        showError('输入包含非法字符，请重新输入');
+        return;
+    }
+
     // 隐藏提示文字
     const tipsElement = document.querySelector('.tips');
     if (tipsElement) {
@@ -173,7 +198,7 @@ function searchUsers() {
     
     // 显示加载中
     resultsContainer.innerHTML = `
-        <div class="loading">
+        <div class="loading" role="status" aria-label="正在搜索中...">
             <p>🔍 正在搜索... "${escapeHtml(toSimplified(nickname))}" ...</p>
         </div>
     `;
@@ -215,7 +240,7 @@ function displaySearchResults(results) {
 
     if (results.length === 0) {
         resultsContainer.innerHTML = `
-            <div class="empty">
+            <div class="empty" role="alert" aria-label="未找到匹配的用户">
                 <p>😔 未找到匹配的用户</p>
                 <p style="margin-top: 10px; font-size: 14px; color: #888;">
                     请尝试输入其他关键词，支持简繁体查询
@@ -237,7 +262,7 @@ function displaySearchResults(results) {
             🎯 找到 <strong>${results.length}</strong> 个匹配的用户，
             按拥有印花的数量排序，请点击查看详情：
         </div>
-        <ul class="results-list">
+        <ul class="results-list" role="listbox" aria-label="搜索结果列表">
     `;
 
     results.forEach(user => {
@@ -246,7 +271,7 @@ function displaySearchResults(results) {
         // 检查是否有消费记录
         const hasConsumption = user.current_round_used > 0;
         html += `
-            <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')">
+            <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')" role="option" tabindex="0" aria-selected="false">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
                     剩余印花: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
@@ -274,6 +299,7 @@ function showUserDetailByNickname(nickname) {
 function showUserDetail(user) {
     // 显示简体字昵称
     detailNickname.textContent = toSimplified(user.nickname);
+    detailNickname.setAttribute('aria-label', `用户详情：${toSimplified(user.nickname)}`);
 
     // 设置为空字符串，因为拍卖相关功能已注释
     const consumeDetailsHtml = '';
@@ -303,6 +329,7 @@ function showUserDetail(user) {
 
     // 显示详情面板
     userDetail.style.display = 'block';
+    userDetail.setAttribute('aria-hidden', 'false');
     resultsContainer.innerHTML = '';
     
     // 隐藏拍卖消费记录按钮
@@ -330,7 +357,7 @@ function hideConsumePopup(element) {
 // 显示错误
 function showError(message) {
     resultsContainer.innerHTML = `
-        <div class="error">
+        <div class="error" role="alert" aria-label="错误信息：${message}">
             ❌ ${escapeHtml(message)}
         </div>
     `;
@@ -340,17 +367,22 @@ function showError(message) {
 // 事件监听
 searchBtn.addEventListener('click', searchUsers);
 
+// 使用防抖处理输入事件
+const debouncedSearch = debounce(searchUsers, 500);
+searchInput.addEventListener('input', debouncedSearch);
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+        e.preventDefault(); // 防止表单提交
         searchUsers();
     }
 });
 
 closeDetail.addEventListener('click', () => {
     userDetail.style.display = 'none';
+    userDetail.setAttribute('aria-hidden', 'true');
     searchInput.value = '';
     resultsContainer.innerHTML = `
-        <div class="empty">
+        <div class="empty" aria-label="输入昵称开始查询">
             <p>输入昵称开始查询</p>
         </div>
     `;
@@ -376,13 +408,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Escape') {
             // 关闭详情面板
             userDetail.style.display = 'none';
+            userDetail.setAttribute('aria-hidden', 'true');
             
             // 清空搜索框
             searchInput.value = '';
             
             // 重置结果容器
             resultsContainer.innerHTML = `
-                <div class="empty">
+                <div class="empty" aria-label="输入昵称开始查询">
                     <p>输入昵称开始查询</p>
                 </div>
             `;
@@ -408,7 +441,7 @@ window.showUserDetailByNickname = showUserDetailByNickname;
 
 // 初始状态
 resultsContainer.innerHTML = `
-    <div class="empty">
+    <div class="empty" aria-label="请输入昵称">
         <p>请输入昵称</p>
     </div>
 `;
