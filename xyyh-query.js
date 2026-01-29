@@ -44,6 +44,7 @@ const userDetail = document.getElementById('userDetail');
 const detailNickname = document.getElementById('detailNickname');
 const stampStats = document.getElementById('stampStats');
 const closeDetail = document.getElementById('closeDetail');
+const consumeBtnContainer = document.getElementById('consumeBtnContainer'); // 新增：拍卖记录按钮容器
 
 // 完善简繁体转换映射
 const traditionalToSimplified = {
@@ -91,10 +92,61 @@ function toSimplified(text) {
     return text.split('').map(char => traditionalToSimplified[char] || char).join('');
 }
 
-// 获取用户的消费详情
-/*function getUserConsumeDetails(nickname) {
-    return consumeData.filter(record => record.bidder === nickname);
-}*/
+// 计算每个用户的消费金额
+function calculateUserConsumption() {
+    // 创建一个对象存储每个用户的消费总额
+    const consumptionMap = {};
+    
+    // 遍历所有时间段的数据
+    if (typeof ConsumeDataManager !== 'undefined') {
+        const periods = ConsumeDataManager.getPeriods();
+        periods.forEach(period => {
+            const periodData = ConsumeDataManager.getDataByPeriod(period);
+            periodData.forEach(record => {
+                const bidder = record.bidder;
+                const price = record.price;
+                
+                if (consumptionMap[bidder]) {
+                    consumptionMap[bidder] += price;
+                } else {
+                    consumptionMap[bidder] = price;
+                }
+            });
+        });
+    }
+    
+    return consumptionMap;
+}
+
+// 更新印花数据中的消费记录
+function updateStampDataWithConsumeRecords() {
+    // 计算消费记录
+    const consumptionMap = calculateUserConsumption();
+    
+    // 重置所有用户的本轮消费记录
+    stampData.forEach(user => {
+        user.current_round_used = 0;
+    });
+    
+    // 根据消费记录更新用户的印花消费量
+    for (const [bidder, totalConsumption] of Object.entries(consumptionMap)) {
+        const userIndex = stampData.findIndex(user => user.nickname === bidder);
+        if (userIndex !== -1) {
+            // 设置该用户的消费记录
+            stampData[userIndex].current_round_used = totalConsumption;
+            // 重新计算剩余印花
+            stampData[userIndex].current_round_remaining = 
+                stampData[userIndex].prev_round_stamps + 
+                stampData[userIndex].current_round_earned - 
+                stampData[userIndex].current_round_used;
+        }
+    }
+}
+
+// 初始化时更新数据
+if (typeof ConsumeDataManager !== 'undefined') {
+    updateStampDataWithConsumeRecords();
+}
 
 // 搜索函数
 function searchUsers() {
@@ -191,12 +243,16 @@ function displaySearchResults(results) {
     results.forEach(user => {
         // 在显示结果时将昵称转换为简体
         const simplifiedNickname = toSimplified(user.nickname);
+        // 计算消费占比，避免除零错误
+        const consumptionRatio = user.current_round_earned > 0 ? ((user.current_round_used / user.current_round_earned) * 100).toFixed(1) : 0;
         html += `
             <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
-                    印花数: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> 个 | 
-                    本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span>
+                    剩余印花: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
+                    本轮消费: <span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span> |
+                    本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span> |
+                    消费率: <span style="color: ${consumptionRatio > 50 ? '#ff6b6b' : '#4CAF50'};">${consumptionRatio}%</span>
                 </div>
             </li>
         `;
@@ -248,6 +304,11 @@ function showUserDetail(user) {
     // 显示详情面板
     userDetail.style.display = 'block';
     resultsContainer.innerHTML = '';
+    
+    // 隐藏拍卖消费记录按钮
+    if (consumeBtnContainer) {
+        consumeBtnContainer.style.display = 'none';
+    }
 }
 
 // 显示消费详情弹窗(记得恢复此功能时取消注释)
@@ -299,6 +360,11 @@ closeDetail.addEventListener('click', () => {
     if (tipsElement) {
         tipsElement.style.display = 'block';
     }
+    
+    // 重新显示拍卖消费记录按钮
+    if (consumeBtnContainer) {
+        consumeBtnContainer.style.display = 'block';
+    }
 });
 
 // 页面加载完成后自动聚焦到搜索框
@@ -325,6 +391,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const tipsElement = document.querySelector('.tips');
             if (tipsElement) {
                 tipsElement.style.display = 'block';
+            }
+            
+            // 重新显示拍卖消费记录按钮
+            if (consumeBtnContainer) {
+                consumeBtnContainer.style.display = 'block';
             }
         }
     });
