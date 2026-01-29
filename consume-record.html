@@ -80,15 +80,6 @@
             text-align: center;
         }
 
-        /* 隐藏价格列的样式 */
-        .hide-price .price-cell {
-            display: none;
-        }
-        
-        .hide-price th.price-header {
-            display: none;
-        }
-
         .back-btn {
             background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
             color: white;
@@ -379,34 +370,6 @@
             text-align: center;
             padding: 20px 0;
         }
-        
-        /* 最新时间段提示样式 */
-        .latest-period-tag {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
-            vertical-align: middle;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .period-option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .option-tag {
-            background: #6c757d;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-        }
     </style>
 </head>
 <body>
@@ -425,14 +388,14 @@
             
             <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 30px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
             
-            <div class="consume-table-container" id="consumeTableContainer">
+            <div class="consume-table-container">
                 <table class="consume-table">
                     <thead>
                         <tr>
                             <th class="index-cell" style="min-width: 80px;">序号</th>
                             <th class="bidder-cell" style="min-width: 150px;">竞拍成功者</th>
                             <th class="item-cell" style="min-width: 200px;">拍品内容</th>
-                            <th class="price-cell price-header" style="min-width: 100px;">最终成交价</th>
+                            <th class="price-cell" style="min-width: 100px;">最终成交价</th>
                         </tr>
                     </thead>
                     <tbody id="consumeTableBody">
@@ -468,8 +431,6 @@
         const itemsPerPage = 10;
         let currentPage = 1;
         let totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
-        // 最新时间段
-        const latestPeriod = ConsumeDataManager.getLatestPeriod();
 
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
@@ -490,38 +451,7 @@
             periods.forEach(period => {
                 const option = document.createElement('option');
                 option.value = period;
-                
-                // 创建包含标签的选项内容
-                const optionContent = document.createElement('div');
-                optionContent.className = 'period-option';
-                
-                const periodNameSpan = document.createElement('span');
-                periodNameSpan.textContent = period;
-                
-                const tagSpan = document.createElement('span');
-                tagSpan.className = 'option-tag';
-                
-                if (period === latestPeriod) {
-                    tagSpan.textContent = '最新';
-                    tagSpan.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                } else {
-                    tagSpan.textContent = '历史';
-                    tagSpan.style.background = '#6c757d';
-                }
-                
-                optionContent.appendChild(periodNameSpan);
-                optionContent.appendChild(tagSpan);
-                
-                // 使用innerHTML设置选项内容
-                option.innerHTML = `
-                    <div class="period-option">
-                        <span>${period}</span>
-                        <span class="option-tag" style="background: ${period === latestPeriod ? 'linear-gradient(135deg, #28a745 0%, #20c997 100%)' : '#6c757d'}">
-                            ${period === latestPeriod ? '最新' : '历史'}
-                        </span>
-                    </div>
-                `;
-                
+                option.textContent = period;
                 if (period === currentPeriod) {
                     option.selected = true;
                 }
@@ -534,12 +464,7 @@
             currentPeriod = document.getElementById('periodSelect').value;
             currentPage = 1;
             totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
-            
-            // 更新标题
-            const isLatestPeriod = currentPeriod === latestPeriod;
-            document.getElementById('currentPeriodTitle').textContent = 
-                `${currentPeriod}${isLatestPeriod ? ' (最新)' : ''} 竞拍明细`;
-            
+            document.getElementById('currentPeriodTitle').textContent = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'}`;
             displayConsumeTable(currentPage);
             renderPagination();
         }
@@ -551,17 +476,6 @@
             const pageData = ConsumeDataManager.getDataByPeriod(currentPeriod).slice(startIndex, endIndex);
             
             const consumeTableBody = document.getElementById('consumeTableBody');
-            const tableContainer = document.getElementById('consumeTableContainer');
-            
-            // 判断是否是最新时间段
-            const isLatestPeriod = currentPeriod === latestPeriod;
-            
-            // 根据是否是最新时间段显示/隐藏价格列
-            if (isLatestPeriod) {
-                tableContainer.classList.remove('hide-price');
-            } else {
-                tableContainer.classList.add('hide-price');
-            }
             
             if (pageData.length === 0) {
                 consumeTableBody.innerHTML = `
@@ -575,27 +489,14 @@
             let html = '';
             pageData.forEach((record, index) => {
                 const globalIndex = startIndex + index + 1; // 全局序号
-                
-                // 如果是最新时间段，显示价格；否则不显示价格
-                if (isLatestPeriod) {
-                    html += `
-                        <tr>
-                            <td class="index-cell">${globalIndex}</td>
-                            <td class="bidder-cell">${escapeHtml(toSimplified(record.bidder))}</td>
-                            <td class="item-cell">${escapeHtml(record.item)}</td>
-                            <td class="price-cell">${record.price}</td>
-                        </tr>
-                    `;
-                } else {
-                    html += `
-                        <tr>
-                            <td class="index-cell">${globalIndex}</td>
-                            <td class="bidder-cell">${escapeHtml(toSimplified(record.bidder))}</td>
-                            <td class="item-cell">${escapeHtml(record.item)}</td>
-                            <td class="price-cell" style="display: none;"></td>
-                        </tr>
-                    `;
-                }
+                html += `
+                    <tr>
+                        <td class="index-cell">${globalIndex}</td>
+                        <td class="bidder-cell">${escapeHtml(toSimplified(record.bidder))}</td>
+                        <td class="item-cell">${escapeHtml(record.item)}</td>
+                        <td class="price-cell">${record.price}</td>
+                    </tr>
+                `;
             });
             consumeTableBody.innerHTML = html;
         }
