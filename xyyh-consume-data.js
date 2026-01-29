@@ -114,9 +114,28 @@ const ConsumeDataManager = {
         return periods.length > 0 ? periods[0] : null;
     },
     
-    // 获取最新时间段（最后添加的时间段）
+    // 获取最新时间段
     getLatestPeriod: function() {
         const periods = this.getPeriods();
-        return periods.length > 0 ? periods[0] : null; // 因为是按时间倒序排列的，第一个就是最新的
+        if (periods.length === 0) return null;
+        // 按时间排序，最新的时间段排在最后
+        periods.sort((a, b) => {
+            // 提取年份和月份进行比较
+            const parseDate = (str) => {
+                const yearMatch = str.match(/(\d+)年/);
+                const monthMatch = str.match(/年\s*(\d+)月/);
+                if (yearMatch && monthMatch) {
+                    return { year: parseInt(yearMatch[1]), month: parseInt(monthMatch[1]) };
+                }
+                return { year: 0, month: 0 };
+            };
+            const dateA = parseDate(a);
+            const dateB = parseDate(b);
+            if (dateA.year !== dateB.year) {
+                return dateB.year - dateA.year;
+            }
+            return dateB.month - dateA.month;
+        });
+        return periods[0]; // 返回最新的时间段
     }
 };
