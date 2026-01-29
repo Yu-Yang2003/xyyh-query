@@ -112,5 +112,11 @@ const ConsumeDataManager = {
     getDefaultPeriod: function() {
         const periods = this.getPeriods();
         return periods.length > 0 ? periods[0] : null;
+    },
+    
+    // 获取最新时间段（最后添加的时间段）
+    getLatestPeriod: function() {
+        const periods = this.getPeriods();
+        return periods.length > 0 ? periods[0] : null; // 因为是按时间倒序排列的，第一个就是最新的
     }
 };
