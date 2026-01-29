@@ -44,7 +44,7 @@ const userDetail = document.getElementById('userDetail');
 const detailNickname = document.getElementById('detailNickname');
 const stampStats = document.getElementById('stampStats');
 const closeDetail = document.getElementById('closeDetail');
-const consumeBtnContainer = document.getElementById('consumeBtnContainer'); // 新增：拍卖记录按钮容器
+const consumeBtnContainer = document.getElementById('consumeBtnContainer'); // 拍卖记录按钮容器
 
 // 完善简繁体转换映射
 const traditionalToSimplified = {
@@ -97,12 +97,12 @@ function calculateUserConsumption() {
     // 创建一个对象存储每个用户的消费总额
     const consumptionMap = {};
     
-    // 遍历所有时间段的数据
+    // 遍历最新时间段的数据
     if (typeof ConsumeDataManager !== 'undefined') {
-        const periods = ConsumeDataManager.getPeriods();
-        periods.forEach(period => {
-            const periodData = ConsumeDataManager.getDataByPeriod(period);
-            periodData.forEach(record => {
+        const latestPeriod = ConsumeDataManager.getLatestPeriod();
+        if(latestPeriod) {
+            const latestData = ConsumeDataManager.getDataByPeriod(latestPeriod);
+            latestData.forEach(record => {
                 const bidder = record.bidder;
                 const price = record.price;
                 
@@ -112,7 +112,7 @@ function calculateUserConsumption() {
                     consumptionMap[bidder] = price;
                 }
             });
-        });
+        }
     }
     
     return consumptionMap;
@@ -120,7 +120,7 @@ function calculateUserConsumption() {
 
 // 更新印花数据中的消费记录
 function updateStampDataWithConsumeRecords() {
-    // 计算消费记录
+    // 计算最新时间段的消费记录
     const consumptionMap = calculateUserConsumption();
     
     // 重置所有用户的本轮消费记录
@@ -243,13 +243,16 @@ function displaySearchResults(results) {
     results.forEach(user => {
         // 在显示结果时将昵称转换为简体
         const simplifiedNickname = toSimplified(user.nickname);
+        // 检查是否有消费记录
+        const hasConsumption = user.current_round_used > 0;
         html += `
             <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
                     剩余印花: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
-                    本轮消费: <span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span> |
-                    本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span> |
+                    本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span>` +
+                    (hasConsumption ? ` | 本轮消费: <span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span>` : '') +
+                    `
                 </div>
             </li>
         `;
