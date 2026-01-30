@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>印花数据格式转换器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .input-section, .output-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .input-section:hover, .output-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4CAF50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #4CAF50;
+        }
+        
+        .input-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f1f3f9;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .tab-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        textarea, .input-example {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border: 2px solid #e1e5eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .input-example {
+            background-color: #f9f9fc;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            overflow-y: auto;
+        }
+        
+        .file-upload {
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 25px;
+            border: 2px dashed #c8d0e7;
+            border-radius: 8px;
+            background-color: #f9f9fc;
+            transition: all 0.3s;
+        }
+        
+        .file-upload:hover {
+            border-color: #4CAF50;
+            background-color: #f1f8e9;
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .upload-label {
+            display: block;
+            cursor: pointer;
+            color: #555;
+        }
+        
+        .upload-label i {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .upload-label span {
+            font-weight: 600;
+            color: #4CAF50;
+            text-decoration: underline;
+        }
+        
+        .format-info {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #2e7d32;
+        }
+        
+        .format-info h4 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-convert {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+        }
+        
+        .btn-convert:hover {
+            background: linear-gradient(to right, #43A047, #7CB342);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-clear {
+            background-color: #f1f3f9;
+            color: #555;
+        }
+        
+        .btn-clear:hover {
+            background-color: #e1e5eb;
+        }
+        
+        .btn-copy {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background-color: #0b7dda;
+        }
+        
+        .output-container {
+            position: relative;
+        }
+        
+        #output {
+            white-space: pre;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9fc;
+            border: 2px solid #e1e5eb;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .empty-output {
+            color: #aaa;
+            font-style: italic;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2196F3;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .instructions {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e5eb;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .example-box {
+            background-color: #f9f9fc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        .output-options {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .output-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .input-section, .output-section {
+                width: 100%;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .output-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <h1>印花数据格式转换器</h1>
+        <p class="subtitle">上传印花数据文件或手动输入内容，自动转换为标准JSON格式</p>
+    </div>
+    
+    <div class="container">
+        <div class="input-section">
+            <h2 class="section-title"><i class="fas fa-upload"></i>输入数据</h2>
+            
+            <div class="input-methods">
+                <button class="tab-btn active" data-tab="manual">手动输入</button>
+                <button class="tab-btn" data-tab="file">上传文件</button>
+            </div>
+            
+            <div class="tab-content active" id="manual-tab">
+                <div class="format-info">
+                    <h4>输入格式说明：</h4>
+                    <p>每行输入一条记录，格式为：<strong>昵称 上一轮印花数 本轮获得印花数 本轮使用印花数 本轮剩余印花数</strong></p>
+                    <p>使用空格、Tab或逗号分隔各个字段</p>
+                </div>
+                
+                <textarea id="manualInput" placeholder="请输入印花数据，每行一条记录，例如：
+peach 80 87 0 167
+用户1 50 30 10 70
+用户2 100 45 20 125"></textarea>
+                
+                <div class="input-example">
+                    <strong>示例数据：</strong><br>
+                    peach 80 87 0 167<br>
+                    喵喵 50 30 10 70<br>
+                    王哈哈 100 45 20 125<br>
+                    pa寶 120 60 40 140<br>
+                    cyannn 75 35 15 95
+                </div>
+            </div>
+            
+            <div class="tab-content" id="file-tab">
+                <div class="file-upload">
+                    <label class="upload-label" for="fileInput">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        点击选择文件或拖拽到此区域
+                        <br>
+                        <span>选择TXT文件</span>
+                        <br>
+                        <small>支持.txt文件，每行一条记录</small>
+                    </label>
+                    <input type="file" id="fileInput" accept=".txt">
+                </div>
+                
+                <div id="fileInfo" class="format-info" style="display: none;">
+                    <h4>已选择文件：</h4>
+                    <p id="fileName"></p>
+                    <p id="fileSize"></p>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-convert" id="convertBtn">
+                    <i class="fas fa-exchange-alt"></i> 转换数据
+                </button>
+                <button class="btn btn-clear" id="clearBtn">
+                    <i class="fas fa-broom"></i> 清除输入
+                </button>
+            </div>
+        </div>
+        
+        <div class="output-section">
+            <h2 class="section-title"><i class="fas fa-download"></i>输出结果</h2>
+            
+            <div class="output-options">
+                <label>
+                    <input type="radio" name="outputFormat" value="single" checked> 单行输出（用逗号分隔）
+                </label>
+                <label>
+                    <input type="radio" name="outputFormat" value="array"> JSON数组格式
+                </label>
+            </div>
+            
+            <div class="output-container">
+                <div id="output" class="empty-output">
+                    转换后的结果将显示在这里...
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-copy" id="copyBtn">
+                    <i class="far fa-copy"></i> 复制结果
+                </button>
+                <button class="btn btn-clear" id="clearOutputBtn">
+                    <i class="fas fa-broom"></i> 清除输出
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h3>使用说明</h3>
+        <ul>
+            <li>支持两种输入方式：手动输入文本或上传TXT文件</li>
+            <li>每行一条记录，格式为：<strong>昵称 上一轮印花数 本轮获得印花数 本轮使用印花数 本轮剩余印花数</strong></li>
+            <li>字段之间可以使用空格、Tab或逗号分隔</li>
+            <li>转换后的格式为：{"nickname": "昵称", "prev_round_stamps": 上一轮印花数, "current_round_earned": 本轮获得印花数, "current_round_used": 本轮使用印花数, "current_round_remaining": 本轮剩余印花数}</li>
+            <li>可以选择输出格式：单行输出（每行一个对象，用逗号分隔）或JSON数组格式</li>
+        </ul>
+        
+        <div class="example-box">
+            <strong>输入示例：</strong><br>
+            peach 80 87 0 167<br>
+            喵喵 50 30 10 70<br>
+            <br>
+            <strong>单行输出示例：</strong><br>
+            {"nickname": "peach", "prev_round_stamps": 80, "current_round_earned": 87, "current_round_used": 0, "current_round_remaining": 167},<br>
+            {"nickname": "喵喵", "prev_round_stamps": 50, "current_round_earned": 30, "current_round_used": 10, "current_round_remaining": 70},<br>
+            <br>
+            <strong>JSON数组输出示例：</strong><br>
+            [<br>
+            &nbsp;&nbsp;{"nickname": "peach", "prev_round_stamps": 80, "current_round_earned": 87, "current_round_used": 0, "current_round_remaining": 167},<br>
+            &nbsp;&nbsp;{"nickname": "喵喵", "prev_round_stamps": 50, "current_round_earned": 30, "current_round_used": 10, "current_round_remaining": 70}<br>
+            ]
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // 获取DOM元素
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const manualInput = document.getElementById('manualInput');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearOutputBtn = document.getElementById('clearOutputBtn');
+        const output = document.getElementById('output');
+        const notification = document.getElementById('notification');
+        const outputFormatRadios = document.querySelectorAll('input[name="outputFormat"]');
+        
+        // 标签切换功能
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                
+                // 更新标签按钮状态
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // 更新标签内容状态
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // 获取当前输出格式
+        function getOutputFormat() {
+            for (const radio of outputFormatRadios) {
+                if (radio.checked) {
+                    return radio.value;
+                }
+            }
+            return 'single';
+        }
+        
+        // 文件上传处理
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                fileName.textContent = `文件名: ${file.name}`;
+                fileSize.textContent = `文件大小: ${(file.size / 1024).toFixed(2)} KB`;
+                fileInfo.style.display = 'block';
+                
+                // 读取文件内容
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // 切换到手动输入标签并填充内容
+                    document.querySelector('[data-tab="manual"]').click();
+                    manualInput.value = e.target.result;
+                };
+                reader.readAsText(file);
+            } else {
+                fileInfo.style.display = 'none';
+            }
+        });
+        
+        // 拖拽上传功能
+        const uploadLabel = document.querySelector('.upload-label');
+        uploadLabel.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadLabel.style.borderColor = '#4CAF50';
+            uploadLabel.style.backgroundColor = '#f1f8e9';
+        });
+        
+        uploadLabel.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadLabel.style.borderColor = '#c8d0e7';
+            uploadLabel.style.backgroundColor = '#f9f9fc';
+        });
+        
+        uploadLabel.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadLabel.style.borderColor = '#c8d0e7';
+            uploadLabel.style.backgroundColor = '#f9f9fc';
+            
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileInput.dispatchEvent(new Event('change'));
+                } else {
+                    showNotification('请上传TXT文件', 'error');
+                }
+            }
+        });
+        
+        // 转换功能
+        convertBtn.addEventListener('click', () => {
+            const inputText = manualInput.value.trim();
+            const outputFormat = getOutputFormat();
+            
+            if (!inputText) {
+                showNotification('请输入要转换的数据', 'error');
+                return;
+            }
+            
+            // 按行分割输入文本
+            const lines = inputText.split('\n');
+            const result = [];
+            
+            // 处理每一行
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return; // 跳过空行
+                
+                // 使用正则表达式分割行（支持空格、制表符和逗号分隔）
+                const parts = line.split(/\s+|,+/);
+                
+                if (parts.length >= 5) {
+                    // 获取昵称
+                    const nickname = parts[0].trim();
+                    
+                    // 获取各个数值字段
+                    const prevRoundStamps = parseInt(parts[1].trim()) || 0;
+                    const currentRoundEarned = parseInt(parts[2].trim()) || 0;
+                    const currentRoundUsed = parseInt(parts[3].trim()) || 0;
+                    const currentRoundRemaining = parseInt(parts[4].trim()) || 0;
+                    
+                    // 添加到结果数组
+                    result.push({
+                        nickname,
+                        prev_round_stamps: prevRoundStamps,
+                        current_round_earned: currentRoundEarned,
+                        current_round_used: currentRoundUsed,
+                        current_round_remaining: currentRoundRemaining
+                    });
+                } else {
+                    // 如果字段数量不足，显示错误
+                    showNotification(`行 "${line}" 格式错误，需要5个字段`, 'error');
+                }
+            });
+            
+            // 格式化输出
+            if (result.length > 0) {
+                let formattedResult = '';
+                
+                if (outputFormat === 'array') {
+                    // JSON数组格式
+                    formattedResult = JSON.stringify(result, null, 2);
+                } else {
+                    // 单行输出格式
+                    formattedResult = result.map(item => 
+                        JSON.stringify(item)
+                    ).join(',\n');
+                }
+                
+                output.textContent = formattedResult;
+                output.classList.remove('empty-output');
+                showNotification(`成功转换 ${result.length} 条记录`, 'success');
+            } else {
+                output.textContent = "未找到有效数据，请检查输入格式";
+                output.classList.add('empty-output');
+            }
+        });
+        
+        // 清除输入
+        clearBtn.addEventListener('click', () => {
+            manualInput.value = '';
+            fileInput.value = '';
+            fileInfo.style.display = 'none';
+            showNotification('输入内容已清除', 'info');
+        });
+        
+        // 清除输出
+        clearOutputBtn.addEventListener('click', () => {
+            output.textContent = "转换后的结果将显示在这里...";
+            output.classList.add('empty-output');
+            showNotification('输出内容已清除', 'info');
+        });
+        
+        // 复制结果
+        copyBtn.addEventListener('click', () => {
+            if (!output.textContent || output.classList.contains('empty-output')) {
+                showNotification('没有可复制的内容', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(output.textContent)
+                .then(() => {
+                    showNotification('结果已复制到剪贴板', 'success');
+                })
+                .catch(err => {
+                    console.error('复制失败: ', err);
+                    // 备用复制方法
+                    const textArea = document.createElement('textarea');
+                    textArea.value = output.textContent;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showNotification('结果已复制到剪贴板', 'success');
+                    } catch (err) {
+                        showNotification('复制失败，请手动选择复制', 'error');
+                    }
+                    document.body.removeChild(textArea);
+                });
+        });
+        
+        // 显示通知
+        function showNotification(message, type) {
+            // 设置通知内容和样式
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            // 根据类型设置颜色
+            if (type === 'success') {
+                notification.style.backgroundColor = '#4CAF50';
+            } else if (type === 'error') {
+                notification.style.backgroundColor = '#f44336';
+            } else {
+                notification.style.backgroundColor = '#2196F3';
+            }
+            
+            // 显示通知
+            notification.classList.add('show');
+            
+            // 3秒后隐藏通知
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 初始化：加载示例数据
+        window.addEventListener('DOMContentLoaded', () => {
+            const exampleData = `peach 80 87 0 167
+喵喵 50 30 10 70
+王哈哈 100 45 20 125
+pa寶 120 60 40 140
+cyannn 75 35 15 95`;
+            
+            manualInput.value = exampleData;
+            showNotification('示例数据已加载，点击"转换数据"按钮开始', 'info');
+        });
+    </script>
+</body>
+</html>
