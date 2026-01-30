@@ -3,7 +3,10 @@ const ConsumeDataManager = {
     // 按时间段组织的消费记录数据
     // 【录入最新数据的位置】在这里添加新的时间段和数据
     data: {
-        "2025年9月 ~ 2025年10月": [
+        "第三轮拍卖": {
+            statsRange: "2025年9月 ~ 2025年10月", // 【需要录入拍卖的统计范围】
+            auctionTime: "2025年11月10日", // 【需要录入拍卖时间】
+            records: [
                 {bidder: "用户91063", item: "单人拍立得-小卡妆造", price: 5},
                 {bidder: "喵喵", item: "单人拍立得-白天鹅妆造", price: 10},
                 {bidder: "小咩不乖", item: "单人拍立得-假面妆造抱花", price: 10},
@@ -24,27 +27,35 @@ const ConsumeDataManager = {
                 {bidder: "Ghostyu", item: "嘴硬开瓶器", price: 1},
                 {bidder: "沫笙", item: "嘴硬开瓶器", price: 1},
                 {bidder: "木魚喂喂喂", item: "嘴硬开瓶器", price: 1}
-            ],
-            "2025年5月 ~ 2025年6月": [
-            {bidder: "用戶91063", item: "单人拍立得-小卡妆造", price: 4},
-            {bidder: "狼", item: "双人拍立得-小卡妆造 with.李斯", price: 1},
-            {bidder: "沈kk", item: "双人拍立得-小卡妆造 with.一只大虾", price: 2},
-            {bidder: "小浣熊", item: "单人拍立得-wn妆造", price: 6},
-            {bidder: "沈kk", item: "双人拍立得-with.鲸鱼", price: 2},
-            {bidder: "小浣熊", item: "拍立得-小师赛全员", price: 12},
-            {bidder: "用戶91063", item: "双人拍立得-with.囚徒", price: 6},
-            {bidder: "羽若有約", item: "双人拍立得-小卡妆造 with.郭小炜", price: 6},
-            {bidder: "Ghostyu", item: "双人拍立得-小卡妆造 with.荣耀", price: 4},
-            {bidder: "啵啵", item: "双人拍立得-with.鲸鱼 泡泡玛特", price: 8},
-            {bidder: "lucas", item: "双人拍立得-with.少帮主", price: 5},
-            {bidder: "樓總", item: "单人拍立得-京小Cos局妆造", price: 10},
-            {bidder: "lucas", item: "拍立得-挪威全员", price: 12},
-            {bidder: "lucas", item: "嘴硬开瓶器", price: 1},
-            {bidder: "小小小小車", item: "嘴硬开瓶器", price: 1},
-            {bidder: "笙歌落", item: "点歌券", price: 3},
-            {bidder: "PA寶", item: "单人拍立得-挪威", price: 10}
-            ],
-            "2025年7月 ~ 2025年8月": [
+            ]
+        },
+        "第二轮拍卖": {
+            statsRange: "2025年7月 ~ 2025年8月", // 【需要录入拍卖的统计范围】
+            auctionTime: "2025年9月14日", // 【需要录入拍卖时间】
+            records: [
+                {bidder: "用戶91063", item: "单人拍立得-小卡妆造", price: 4},
+                {bidder: "狼", item: "双人拍立得-小卡妆造 with.李斯", price: 1},
+                {bidder: "沈kk", item: "双人拍立得-小卡妆造 with.一只大虾", price: 2},
+                {bidder: "小浣熊", item: "单人拍立得-wn妆造", price: 6},
+                {bidder: "沈kk", item: "双人拍立得-with.鲸鱼", price: 2},
+                {bidder: "小浣熊", item: "拍立得-小师赛全员", price: 12},
+                {bidder: "用戶91063", item: "双人拍立得-with.囚徒", price: 6},
+                {bidder: "羽若有約", item: "双人拍立得-小卡妆造 with.郭小炜", price: 6},
+                {bidder: "Ghostyu", item: "双人拍立得-小卡妆造 with.荣耀", price: 4},
+                {bidder: "啵啵", item: "双人拍立得-with.鲸鱼 泡泡玛特", price: 8},
+                {bidder: "lucas", item: "双人拍立得-with.少帮主", price: 5},
+                {bidder: "樓總", item: "单人拍立得-京小Cos局妆造", price: 10},
+                {bidder: "lucas", item: "拍立得-挪威全员", price: 12},
+                {bidder: "lucas", item: "嘴硬开瓶器", price: 1},
+                {bidder: "小小小小車", item: "嘴硬开瓶器", price: 1},
+                {bidder: "笙歌落", item: "点歌券", price: 3},
+                {bidder: "PA寶", item: "单人拍立得-挪威", price: 10}
+            ]
+        },
+        "第一轮拍卖": {
+            statsRange: "2025年5月 ~ 2025年6月", // 【需要录入拍卖的统计范围】
+            auctionTime: "2025年7月3日", // 【需要录入拍卖时间】
+            records: [
                 {bidder: "pula", item: "to签拍立得-年会妆造", price: 8},
                 {bidder: "啵啵", item: "to签拍立得-泰国妆造", price: 15},
                 {bidder: "小咩不乖", item: "to签拍立得-wn妆造", price: 18},
@@ -72,12 +83,17 @@ const ConsumeDataManager = {
                 {bidder: "小咩不乖", item: "单人拍立得-挪威夜间", price: 8},
                 {bidder: "用戶91063", item: "单人拍立得-wn妆造", price: 6},
                 {bidder: "在下風筝最高", item: "单人拍立得-挪威红房", price: 8}
-            ],
+            ]
+        },
         // 在这里添加新的时间段，例如：
-        // "2026年3月 ~ 2026年4月": [
-        //     {bidder: "新 bidder", item: "新拍品名称", price: 价格},
-        //     {bidder: "另一个用户", item: "另一个拍品", price: 价格}
-        // ]
+        // "第四轮拍卖": {
+        //     statsRange: "2026年1月 ~ 2026年2月", // 【需要录入拍卖的统计范围】
+        //     auctionTime: "2026年3月15日", // 【需要录入拍卖时间】
+        //     records: [
+        //         {bidder: "新 bidder", item: "新拍品名称", price: 价格},
+        //         {bidder: "另一个用户", item: "另一个拍品", price: 价格}
+        //     ]
+        // }
     },
 
     // 获取所有时间段
@@ -87,13 +103,30 @@ const ConsumeDataManager = {
 
     // 获取特定时间段的数据
     getDataByPeriod: function(period) {
-        return this.data[period] || [];
+        const periodData = this.data[period];
+        return periodData ? periodData.records : [];
+    },
+
+    // 获取特定时间段的统计范围
+    getStatsRangeByPeriod: function(period) {
+        const periodData = this.data[period];
+        return periodData ? periodData.statsRange : "";
+    },
+
+    // 获取特定时间段的拍卖时间
+    getAuctionTimeByPeriod: function(period) {
+        const periodData = this.data[period];
+        return periodData ? periodData.auctionTime : "";
     },
 
     // 添加新时间段
-    addPeriod: function(periodName, records = []) {
+    addPeriod: function(periodName, statsRange, auctionTime, records = []) {
         if (!this.data[periodName]) {
-            this.data[periodName] = records;
+            this.data[periodName] = {
+                statsRange: statsRange,
+                auctionTime: auctionTime,
+                records: records
+            };
             return true;
         }
         return false; // 时间段已存在
@@ -102,7 +135,7 @@ const ConsumeDataManager = {
     // 向现有时间段添加新记录
     addRecordsToPeriod: function(periodName, newRecords) {
         if (this.data[periodName]) {
-            this.data[periodName] = [...this.data[periodName], ...newRecords];
+            this.data[periodName].records = [...this.data[periodName].records, ...newRecords];
             return true;
         }
         return false; // 时间段不存在
@@ -120,21 +153,26 @@ const ConsumeDataManager = {
         if (periods.length === 0) return null;
         // 按时间排序，最新的时间段排在最后
         periods.sort((a, b) => {
-            // 提取年份和月份进行比较
-            const parseDate = (str) => {
-                const yearMatch = str.match(/(\d+)年/);
-                const monthMatch = str.match(/年\s*(\d+)月/);
-                if (yearMatch && monthMatch) {
-                    return { year: parseInt(yearMatch[1]), month: parseInt(monthMatch[1]) };
+            // 按拍卖轮次排序，数字大的排在前面
+            const getRoundNumber = (str) => {
+                const match = str.match(/第(.+?)轮拍卖/);
+                if (match) {
+                    const roundText = match[1];
+                    if (roundText === "一") return 1;
+                    if (roundText === "二") return 2;
+                    if (roundText === "三") return 3;
+                    if (roundText === "四") return 4;
+                    if (roundText === "五") return 5;
+                    if (roundText === "六") return 6;
+                    if (roundText === "七") return 7;
+                    if (roundText === "八") return 8;
+                    if (roundText === "九") return 9;
+                    // 如果是数字形式
+                    return parseInt(roundText) || 0;
                 }
-                return { year: 0, month: 0 };
+                return 0;
             };
-            const dateA = parseDate(a);
-            const dateB = parseDate(b);
-            if (dateA.year !== dateB.year) {
-                return dateB.year - dateA.year;
-            }
-            return dateB.month - dateA.month;
+            return getRoundNumber(b) - getRoundNumber(a);
         });
         return periods[0]; // 返回最新的时间段
     }

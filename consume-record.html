@@ -230,6 +230,38 @@
             padding: 15px 0;
         }
         
+        .stat-info {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #6c757d;
+            padding-left: 20px;
+        }
+        
+        .table-header-info {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: var(--info-color);
+            font-weight: 500;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .table-footer-info {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #6c757d;
+            font-style: italic;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
         /* 移动端适配 */
         @media (max-width: 768px) {
             .container {
@@ -331,6 +363,21 @@
                 font-size: 1.3rem;
                 margin-bottom: 20px;
             }
+            
+            .stat-info {
+                padding-left: 12px;
+                font-size: 11px;
+            }
+            
+            .table-header-info {
+                font-size: 15px;
+                padding: 8px;
+            }
+            
+            .table-footer-info {
+                font-size: 11px;
+                padding: 6px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -389,7 +436,7 @@
         
         <div class="main-content" style="padding: 30px;">
             <div class="time-period-selector">
-                <label for="periodSelect">选择时间段：</label>
+                <label for="periodSelect">选择拍卖轮次：</label>
                 <select id="periodSelect" onchange="changePeriod()">
                     <!-- 时段选项将通过JavaScript动态生成 -->
                 </select>
@@ -398,6 +445,11 @@
             <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 30px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
             
             <div class="consume-table-container">
+                <!-- 表格最上面显示本轮印花统计范围 -->
+                <div class="table-header-info" id="statsRange">
+                    <!-- 统计范围将动态加载 -->
+                </div>
+                
                 <table class="consume-table">
                     <thead>
                         <tr>
@@ -411,6 +463,16 @@
                         <!-- 消费记录将动态加载 -->
                     </tbody>
                 </table>
+                
+                <!-- 表格最下面用小字显示本轮拍卖时间 -->
+                <div class="table-footer-info" id="auctionTime">
+                    <!-- 拍卖时间将动态加载 -->
+                </div>
+            </div>
+            
+            <!-- 统计范围和拍卖时间信息 -->
+            <div class="stat-info" id="statInfo">
+                <!-- 统计信息将动态加载 -->
             </div>
             
             <!-- 分页控件 -->
@@ -448,6 +510,9 @@
             populatePeriodSelector();
             displayConsumeTable(currentPage);
             renderPagination();
+            updateStatsRangeDisplay(); // 添加统计范围显示
+            updateAuctionTimeDisplay(); // 添加拍卖时间显示
+            updateStatInfo(); // 添加统计信息显示
             
             // 绑定分页按钮事件
             document.getElementById('prevPage').addEventListener('click', prevPage);
@@ -478,6 +543,43 @@
             document.getElementById('currentPeriodTitle').textContent = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'}`;
             displayConsumeTable(currentPage);
             renderPagination();
+            updateStatsRangeDisplay(); // 更新统计范围显示
+            updateAuctionTimeDisplay(); // 更新拍卖时间显示
+            updateStatInfo(); // 更新统计信息显示
+        }
+
+        // 显示统计范围
+        function updateStatsRangeDisplay() {
+            const statsRangeElement = document.getElementById('statsRange');
+            if (currentPeriod) {
+                const statsRange = ConsumeDataManager.getStatsRangeByPeriod(currentPeriod);
+                statsRangeElement.textContent = `本轮印花统计范围: ${statsRange}`; // 表格最上面显示本轮印花统计范围
+            } else {
+                statsRangeElement.textContent = '';
+            }
+        }
+
+        // 显示拍卖时间
+        function updateAuctionTimeDisplay() {
+            const auctionTimeElement = document.getElementById('auctionTime');
+            if (currentPeriod) {
+                const auctionTime = ConsumeDataManager.getAuctionTimeByPeriod(currentPeriod);
+                auctionTimeElement.textContent = `本轮拍卖时间: ${auctionTime}`; // 表格最下面用小字显示本轮拍卖时间
+            } else {
+                auctionTimeElement.textContent = '';
+            }
+        }
+
+        // 更新统计信息
+        function updateStatInfo() {
+            const statInfoElement = document.getElementById('statInfo');
+            if (currentPeriod) {
+                const statsRange = ConsumeDataManager.getStatsRangeByPeriod(currentPeriod);
+                const auctionTime = ConsumeDataManager.getAuctionTimeByPeriod(currentPeriod);
+                statInfoElement.innerHTML = `统计范围: ${statsRange}<br>拍卖时间: ${auctionTime}`;
+            } else {
+                statInfoElement.textContent = '';
+            }
         }
 
         // 显示消费记录表格（带分页）
@@ -654,8 +756,8 @@
         }
 
         // 添加新时间段的数据（用于维护）
-        function addNewPeriod(periodName, data) {
-            if (ConsumeDataManager.addPeriod(periodName, data)) {
+        function addNewPeriod(periodName, statsRange, auctionTime, records) {
+            if (ConsumeDataManager.addPeriod(periodName, statsRange, auctionTime, records)) {
                 // 重新渲染选择器以包含新的时间段
                 const periodSelect = document.getElementById('periodSelect');
                 const option = document.createElement('option');
