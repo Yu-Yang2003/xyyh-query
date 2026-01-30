@@ -231,42 +231,6 @@
             padding: 15px 0;
         }
         
-        .summary-card {
-            background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid var(--border-color);
-        }
-        
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .summary-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-            border: 1px solid #f0f0f0;
-        }
-        
-        .summary-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-gradient-end);
-            margin: 5px 0;
-        }
-        
-        .summary-label {
-            font-size: 13px;
-            color: var(--light-text);
-        }
-        
         /* 移动端适配 */
         @media (max-width: 768px) {
             .container {
@@ -367,18 +331,6 @@
                 font-size: 1.3rem;
                 margin-bottom: 20px;
             }
-            
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .summary-item {
-                padding: 12px;
-            }
-            
-            .summary-value {
-                font-size: 20px;
-            }
         }
         
         @media (max-width: 480px) {
@@ -425,10 +377,6 @@
                 font-size: 1.2rem;
                 margin-bottom: 18px;
             }
-            
-            .summary-value {
-                font-size: 18px;
-            }
         }
     </style>
 </head>
@@ -439,28 +387,6 @@
         </div>
         
         <div class="main-content" style="padding: 30px;">
-         <!--   <div class="summary-card">
-                <h3 style="text-align: center; margin-bottom: 15px; color: var(--dark-text);">📊 统计摘要</h3>
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <div class="summary-value" id="totalItems">0</div>
-                        <div class="summary-label">拍品总数</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-value" id="totalSpent">0</div>
-                        <div class="summary-label">总消费</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-value" id="uniqueBidders">0</div>
-                        <div class="summary-label">参与人数</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-value" id="avgPrice">0</div>
-                        <div class="summary-label">平均价格</div>
-                    </div>
-                </div>
-            </div> -->
-            
             <div class="time-period-selector">
                 <label for="periodSelect">选择时间段：</label>
                 <select id="periodSelect" onchange="changePeriod()">
@@ -519,7 +445,6 @@
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
             populatePeriodSelector();
-            updateSummaryCard();
             displayConsumeTable(currentPage);
             renderPagination();
             
@@ -544,30 +469,12 @@
             });
         }
 
-        // 更新统计摘要卡片
-        function updateSummaryCard() {
-            const currentData = ConsumeDataManager.getDataByPeriod(currentPeriod);
-            
-            // 计算统计数据
-            const totalItems = currentData.length;
-            const totalSpent = currentData.reduce((sum, record) => sum + record.price, 0);
-            const uniqueBidders = [...new Set(currentData.map(record => record.bidder))].length;
-            const avgPrice = totalItems > 0 ? Math.round(totalSpent / totalItems * 100) / 100 : 0;
-            
-            // 更新页面显示
-            document.getElementById('totalItems').textContent = totalItems;
-            document.getElementById('totalSpent').textContent = totalSpent;
-            document.getElementById('uniqueBidders').textContent = uniqueBidders;
-            document.getElementById('avgPrice').textContent = avgPrice;
-        }
-
         // 切换时间段
         function changePeriod() {
             currentPeriod = document.getElementById('periodSelect').value;
             currentPage = 1;
             totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
             document.getElementById('currentPeriodTitle').textContent = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'}`;
-            updateSummaryCard();
             displayConsumeTable(currentPage);
             renderPagination();
         }
@@ -763,7 +670,6 @@
                 // 如果当前显示的就是这个时间段，则刷新显示
                 if (currentPeriod === periodName) {
                     totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
-                    updateSummaryCard();
                     renderPagination();
                 }
             } else {
@@ -775,4 +681,3 @@
 </body>
 
 </html>
-
