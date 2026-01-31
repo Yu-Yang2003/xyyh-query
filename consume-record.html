@@ -13,6 +13,9 @@
             -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 100vw;
+            -ms-overflow-style: -ms-autohiding-scrollbar; /* IE和Edge的滚动条处理 */
         }
 
         .consume-table {
@@ -268,6 +271,7 @@
             
             .main-content {
                 padding: 20px 12px !important;
+                overflow-x: hidden; /* 防止主内容区水平滚动 */
             }
             
             .time-period-selector {
@@ -317,6 +321,9 @@
             .consume-table-container {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                margin: 0 -12px; /* 补偿主内容区的内边距 */
+                padding: 0 12px; /* 内边距防止内容贴边 */
+                width: calc(100% + 24px); /* 超出容器宽度以允许滚动 */
             }
             
             .consume-table {
@@ -446,6 +453,13 @@
             
             .title-stats-info {
                 font-size: 10px;
+            }
+            
+            /* 特别针对超小屏幕优化表格容器 */
+            .consume-table-container {
+                margin: 0 -5px;
+                padding: 0 5px;
+                width: calc(100% + 10px);
             }
         }
         
