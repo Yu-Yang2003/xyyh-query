@@ -8,43 +8,57 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🏷️ 小雨印花查询系统</h1>
-            <p>当前统计时间段：2025年11月 ~ 2025年12月</p>
-        </div>
-        <div class="search-section">
-            <div class="search-box">
-                <input type="text" 
-                       class="search-input" 
-                       placeholder="请输入昵称（支持简繁体）" 
-                       id="searchInput"
-                       autocomplete="off"
-                       spellcheck="false"
-                       aria-label="输入要查询的昵称">
-                <button class="search-btn" id="searchBtn" aria-label="执行搜索">查询</button>
-            </div> 
-            <div class="tips">
-                💡提示：支持模糊查询，输入部分昵称即可。如果查询到多个用户，请点击选择具体用户查看详情。
+        <header class="header">
+            <div class="header-content">
+                <h1>🏷️ 小雨印花查询系统</h1>
+                <p>当前统计时间段：2025年11月 ~ 2025年12月</p>
             </div>
-        </div>
-        <div class="results-section">
-            <div id="resultsContainer" role="region" aria-live="polite">
-                <!-- 结果将动态加载到这里 -->
-            </div>
-            <div class="user-detail" id="userDetail" aria-hidden="true">
-                <div class="detail-header">
-                    <h2 id="detailNickname" tabindex="0"></h2>
-                    <button class="close-detail" id="closeDetail" aria-label="关闭详情">×</button>
+        </header>
+        
+        <main class="main-content">
+            <section class="search-section">
+                <div class="search-box">
+                    <input type="text" 
+                           class="search-input" 
+                           placeholder="请输入昵称（支持简繁体）" 
+                           id="searchInput"
+                           autocomplete="off"
+                           spellcheck="false"
+                           aria-label="输入要查询的昵称">
+                    <button class="search-btn" id="searchBtn" aria-label="执行搜索">🔍 查询</button>
+                </div> 
+                <div class="tips">
+                    💡提示：支持模糊查询，输入部分昵称即可。如果查询到多个用户，请点击选择具体用户查看详情。
                 </div>
-                <div class="stamp-stats" id="stampStats">
-                    <!-- 数据将动态加载 -->
+            </section>
+            
+            <section class="results-section">
+                <div id="resultsContainer" role="region" aria-live="polite">
+                    <!-- 结果将动态加载到这里 -->
                 </div>
-            </div>
-        </div>  
-        <div id="consumeBtnContainer" style="text-align: center; margin-top: 15px;">
+                
+                <div class="user-detail" id="userDetail" aria-hidden="true">
+                    <div class="detail-header">
+                        <h2 id="detailNickname" tabindex="0"></h2>
+                        <button class="close-detail" id="closeDetail" aria-label="关闭详情">×</button>
+                    </div>
+                    <div class="stamp-stats" id="stampStats">
+                        <!-- 数据将动态加载 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <div id="consumeBtnContainer" class="consume-link-container">
                 <a href="consume-record.html" class="consume-btn" aria-label="查看拍卖消费记录">查看拍卖消费记录</a>
-            </div>  
+            </div>
+            <div class="footer-info">
+                <p>小雨印花查询系统 © 2026</p>
+            </div>
+        </footer>
     </div>
+    
     <!-- 引入印花数据文件 -->
     <script src="xyyh-data.js"></script>
     <script src="xyyh-consume-data.js"></script>

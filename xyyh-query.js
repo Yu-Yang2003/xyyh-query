@@ -1,40 +1,36 @@
 // ==================== 印花数据现在从外部文件导入 ====================
 
-// 消费记录数据
-/*const consumeData = [
-    {bidder: "peach", item: "印花定制贴纸", price: 50},
-    {bidder: "lucas", item: "专属徽章", price: 3},
-    {bidder: "啵啵", item: "限量版周边", price: 2},
-    {bidder: "pa寶", item: "精美相册", price: 4},
-    {bidder: "路人甲乙丙丁", item: "定制书签", price: 5},
-    {bidder: "羽羊", item: "粉红花花单人拍立得", price: 9},
-    {bidder: "用戶91063", item: "小卡妆造单人拍立得", price: 5}
-];
-
-// 更新印花数据中的消费记录
+// 消费记录数据 - 从外部数据源获取，不需要定义本地的consumeData数组
+// 更新印花数据中的消费记录 - 使用外部数据源的数据
 function updateStampDataWithConsumeRecords() {
     // 重置所有用户的本轮消费记录
     stampData.forEach(user => {
         user.current_round_used = 0;
     });
-    
-    // 根据消费记录更新用户的印花消费量
-    consumeData.forEach(record => {
-        const userIndex = stampData.findIndex(user => user.nickname === record.bidder);
-        if (userIndex !== -1) {
-            // 累加该用户的消费记录
-            stampData[userIndex].current_round_used += record.price;
-            // 重新计算剩余印花
-            stampData[userIndex].current_round_remaining = 
-                stampData[userIndex].prev_round_stamps + 
-                stampData[userIndex].current_round_earned - 
-                stampData[userIndex].current_round_used;
+
+    // 使用ConsumeDataManager获取最新的消费记录
+    if (typeof ConsumeDataManager !== 'undefined') {
+        const latestPeriod = ConsumeDataManager.getLatestPeriod();
+        if(latestPeriod) {
+            const latestData = ConsumeDataManager.getDataByPeriod(latestPeriod);
+            latestData.forEach(record => {
+                const userIndex = stampData.findIndex(user => user.nickname === record.bidder);
+                if (userIndex !== -1) {
+                    // 累加该用户的消费记录
+                    stampData[userIndex].current_round_used += record.price;
+                    // 重新计算剩余印花
+                    stampData[userIndex].current_round_remaining = 
+                        stampData[userIndex].prev_round_stamps + 
+                        stampData[userIndex].current_round_earned - 
+                        stampData[userIndex].current_round_used;
+                }
+            });
         }
-    });
+    }
 }
 
 // 初始化时更新数据
-updateStampDataWithConsumeRecords();*/ //(记得恢复此功能时取消注释)
+updateStampDataWithConsumeRecords(); // 取消注释以启用此功能
 
 // DOM元素
 const searchInput = document.getElementById('searchInput');
@@ -137,7 +133,7 @@ function calculateUserConsumption() {
     return consumptionMap;
 }
 
-// 更新印花数据中的消费记录
+// 更新印花数据中的消费记录 - 已改为使用外部数据源
 function updateStampDataWithConsumeRecords() {
     // 计算最新时间段的消费记录
     const consumptionMap = calculateUserConsumption();
@@ -270,6 +266,8 @@ function displaySearchResults(results) {
         const simplifiedNickname = toSimplified(user.nickname);
         // 检查是否有消费记录
         const hasConsumption = user.current_round_used > 0;
+        // 获取用户的消费记录（如果有的话）
+        const userConsumeRecords = getUserConsumeRecords(user.nickname);
         html += `
             <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')" role="option" tabindex="0" aria-selected="false">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
@@ -279,12 +277,37 @@ function displaySearchResults(results) {
                     (hasConsumption ? ` | 本轮消费: <span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span>` : '') +
                     `
                 </div>
+                ${hasConsumption ? `
+                <div class="consume-details-popup" onmouseenter="showConsumePopup(this)" onmouseleave="hideConsumePopup(this)">
+                    <div class="consume-popup" style="display: none;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #2c3e50;">消费详情</div>
+                        ${userConsumeRecords.map(record => `
+                            <div class="consume-record">
+                                <span class="item">${escapeHtml(record.item)}</span>:
+                                <span class="price">${record.price}</span>印花
+                            </div>
+                        `).join('')}
+                    </div>
+                    <span style="font-size: 12px; color: #888; cursor: help;">鼠标悬停查看消费详情</span>
+                </div>` : ''}
             </li>
         `;
     });
 
     html += '</ul>';
     resultsContainer.innerHTML = html;
+}
+
+// 获取用户的消费记录
+function getUserConsumeRecords(nickname) {
+    if (typeof ConsumeDataManager !== 'undefined') {
+        const latestPeriod = ConsumeDataManager.getLatestPeriod();
+        if(latestPeriod) {
+            const latestData = ConsumeDataManager.getDataByPeriod(latestPeriod);
+            return latestData.filter(record => record.bidder === nickname);
+        }
+    }
+    return [];
 }
 
 // 通过昵称显示用户详情
@@ -301,8 +324,20 @@ function showUserDetail(user) {
     detailNickname.textContent = toSimplified(user.nickname);
     detailNickname.setAttribute('aria-label', `用户详情：${toSimplified(user.nickname)}`);
 
-    // 设置为空字符串，因为拍卖相关功能已注释
-    const consumeDetailsHtml = '';
+    // 获取用户的消费记录（如果有的话）
+    const userConsumeRecords = getUserConsumeRecords(user.nickname);
+    const consumeDetailsHtml = userConsumeRecords.length > 0 ? `
+        <div class="stat-item" style="grid-column: 1 / -1;">
+            <div class="stat-label">消费详情</div>
+            <div class="consume-details-popup" style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 5px; border-left: 3px solid var(--accent-color);">
+                ${userConsumeRecords.map(record => `
+                    <div class="consume-record" style="margin-bottom: 8px; padding: 5px 0; border-bottom: 1px dashed #eee;">
+                        <span class="item" style="font-weight: 600; color: var(--dark-text);">${escapeHtml(record.item)}</span>:
+                        <span class="price" style="color: var(--accent-color); font-weight: bold;">${record.price}</span>印花
+                    </div>
+                `).join('')}
+            </div>
+        </div>` : '';
 
     stampStats.innerHTML = `
         <div class="stat-item">
@@ -313,7 +348,7 @@ function showUserDetail(user) {
             <div class="stat-label">本轮获得印花</div>
             <div class="stat-value" style="color: #4CAF50;">+${user.current_round_earned}</div>
         </div>
-      <div class="stat-item" style="position: relative;">
+        <div class="stat-item" style="position: relative;">
             <div class="stat-label">本轮消费印花</div>
             <div class="stat-value" style="color: #ff6b6b;">
                 -${user.current_round_used}
@@ -325,6 +360,7 @@ function showUserDetail(user) {
                 ${user.current_round_remaining}
             </div>
         </div>
+        ${consumeDetailsHtml}
     `;
 
     // 显示详情面板
@@ -338,21 +374,21 @@ function showUserDetail(user) {
     }
 }
 
-// 显示消费详情弹窗(记得恢复此功能时取消注释)
-/*function showConsumePopup(element) {
+// 显示消费详情弹窗
+function showConsumePopup(element) {
     const popup = element.querySelector('.consume-popup');
     if (popup) {
         popup.style.display = 'block';
     }
 }
 
-// 隐藏消费详情弹窗(记得恢复此功能时取消注释)
+// 隐藏消费详情弹窗
 function hideConsumePopup(element) {
     const popup = element.querySelector('.consume-popup');
     if (popup) {
         popup.style.display = 'none';
     }
-}*/
+}
 
 // 显示错误
 function showError(message) {
@@ -436,8 +472,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 将函数暴露给全局作用域，供onclick使用
 window.showUserDetailByNickname = showUserDetailByNickname;
-//window.showConsumePopup = showConsumePopup;  //(记得恢复此功能时取消注释)
-//window.hideConsumePopup = hideConsumePopup;  //(记得恢复此功能时取消注释)
+window.showConsumePopup = showConsumePopup;  // 取消注释以启用此功能
+window.hideConsumePopup = hideConsumePopup;  // 取消注释以启用此功能
 
 // 初始状态
 resultsContainer.innerHTML = `

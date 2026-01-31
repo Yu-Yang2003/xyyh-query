@@ -326,7 +326,9 @@ const stampData = [
     {"nickname": "肥嘟嘟佑門衛", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "張灯結彩", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
     {"nickname": "kevin", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
-    {"nickname": "time", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1}
+    {"nickname": "time", "prev_round_stamps": 1, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1},
+    {"nickname": "xyy", "prev_round_stamps": 1000, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1000},
+
 ];
 
 // 导出数据以供其他文件使用
