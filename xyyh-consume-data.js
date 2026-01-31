@@ -33,29 +33,6 @@ const ConsumeDataManager = {
             statsRange: "2025年7月 ~ 2025年8月", // 【需要录入拍卖的统计范围】
             auctionTime: "2025年9月14日", // 【需要录入拍卖时间】
             records: [
-                {bidder: "用戶91063", item: "单人拍立得-小卡妆造", price: 4},
-                {bidder: "狼", item: "双人拍立得-小卡妆造 with.李斯", price: 1},
-                {bidder: "沈kk", item: "双人拍立得-小卡妆造 with.一只大虾", price: 2},
-                {bidder: "小浣熊", item: "单人拍立得-wn妆造", price: 6},
-                {bidder: "沈kk", item: "双人拍立得-with.鲸鱼", price: 2},
-                {bidder: "小浣熊", item: "拍立得-小师赛全员", price: 12},
-                {bidder: "用戶91063", item: "双人拍立得-with.囚徒", price: 6},
-                {bidder: "羽若有約", item: "双人拍立得-小卡妆造 with.郭小炜", price: 6},
-                {bidder: "Ghostyu", item: "双人拍立得-小卡妆造 with.荣耀", price: 4},
-                {bidder: "啵啵", item: "双人拍立得-with.鲸鱼 泡泡玛特", price: 8},
-                {bidder: "lucas", item: "双人拍立得-with.少帮主", price: 5},
-                {bidder: "樓總", item: "单人拍立得-京小Cos局妆造", price: 10},
-                {bidder: "lucas", item: "拍立得-挪威全员", price: 12},
-                {bidder: "lucas", item: "嘴硬开瓶器", price: 1},
-                {bidder: "小小小小車", item: "嘴硬开瓶器", price: 1},
-                {bidder: "笙歌落", item: "点歌券", price: 3},
-                {bidder: "PA寶", item: "单人拍立得-挪威", price: 10}
-            ]
-        },
-        "第一轮拍卖": {
-            statsRange: "2025年5月 ~ 2025年6月", // 【需要录入拍卖的统计范围】
-            auctionTime: "2025年7月3日", // 【需要录入拍卖时间】
-            records: [
                 {bidder: "pula", item: "to签拍立得-年会妆造", price: 8},
                 {bidder: "啵啵", item: "to签拍立得-泰国妆造", price: 15},
                 {bidder: "小咩不乖", item: "to签拍立得-wn妆造", price: 18},
@@ -83,6 +60,29 @@ const ConsumeDataManager = {
                 {bidder: "小咩不乖", item: "单人拍立得-挪威夜间", price: 8},
                 {bidder: "用戶91063", item: "单人拍立得-wn妆造", price: 6},
                 {bidder: "在下風筝最高", item: "单人拍立得-挪威红房", price: 8}
+            ]
+        },
+        "第一轮拍卖": {
+            statsRange: "2025年5月 ~ 2025年6月", // 【需要录入拍卖的统计范围】
+            auctionTime: "2025年7月3日", // 【需要录入拍卖时间】
+            records: [
+                {bidder: "用戶91063", item: "单人拍立得-小卡妆造", price: 4},
+                {bidder: "狼", item: "双人拍立得-小卡妆造 with.李斯", price: 1},
+                {bidder: "沈kk", item: "双人拍立得-小卡妆造 with.一只大虾", price: 2},
+                {bidder: "小浣熊", item: "单人拍立得-wn妆造", price: 6},
+                {bidder: "沈kk", item: "双人拍立得-with.鲸鱼", price: 2},
+                {bidder: "小浣熊", item: "拍立得-小师赛全员", price: 12},
+                {bidder: "用戶91063", item: "双人拍立得-with.囚徒", price: 6},
+                {bidder: "羽若有約", item: "双人拍立得-小卡妆造 with.郭小炜", price: 6},
+                {bidder: "Ghostyu", item: "双人拍立得-小卡妆造 with.荣耀", price: 4},
+                {bidder: "啵啵", item: "双人拍立得-with.鲸鱼 泡泡玛特", price: 8},
+                {bidder: "lucas", item: "双人拍立得-with.少帮主", price: 5},
+                {bidder: "樓總", item: "单人拍立得-京小Cos局妆造", price: 10},
+                {bidder: "lucas", item: "拍立得-挪威全员", price: 12},
+                {bidder: "lucas", item: "嘴硬开瓶器", price: 1},
+                {bidder: "小小小小車", item: "嘴硬开瓶器", price: 1},
+                {bidder: "笙歌落", item: "点歌券", price: 3},
+                {bidder: "PA寶", item: "单人拍立得-挪威", price: 10}
             ]
         },
         // 在这里添加新的时间段，例如：
@@ -176,4 +176,5 @@ const ConsumeDataManager = {
         });
         return periods[0]; // 返回最新的时间段
     }
+
 };
