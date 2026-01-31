@@ -568,7 +568,7 @@
             const statsRangeElement = document.getElementById('statsRange');
             if (currentPeriod) {
                 const statsRange = ConsumeDataManager.getStatsRangeByPeriod(currentPeriod);
-                statsRangeElement.textContent = `印花统计范围: ${statsRange}`;
+                statsRangeElement.textContent = `本轮印花统计范围: ${statsRange}`;
             } else {
                 statsRangeElement.textContent = '';
             }
@@ -579,7 +579,7 @@
             const statInfoElement = document.getElementById('statInfo');
             if (currentPeriod) {
                 const auctionTime = ConsumeDataManager.getAuctionTimeByPeriod(currentPeriod);
-                statInfoElement.innerHTML = `拍卖时间: ${auctionTime}`; // 只显示拍卖时间
+                statInfoElement.innerHTML = `本轮拍卖时间: ${auctionTime}`; // 只显示拍卖时间
             } else {
                 statInfoElement.textContent = '';
             }
@@ -786,3 +786,4 @@
 
 </body>
 </html>
+
