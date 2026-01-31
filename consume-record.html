@@ -9,14 +9,15 @@
         /* 专门用于消费记录页面的样式 */
         .consume-table-container {
             margin-top: 20px;
-            overflow-x: auto;
+            overflow-x: auto; /* 确保可以左右滑动 */
+            -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            -webkit-overflow-scrolling: touch; /* 添加iOS平滑滚动 */
         }
 
         .consume-table {
             width: 100%;
+            min-width: 500px; /* 确保表格有最小宽度，在手机端可以滑动 */
             border-collapse: separate;
             border-spacing: 0;
             background: white;
@@ -28,7 +29,7 @@
             text-align: center;
             border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
-            white-space: nowrap; /* 防止换行 */
+            white-space: nowrap; /* 防止单元格内容换行 */
         }
 
         .consume-table th {
@@ -66,19 +67,25 @@
             color: var(--success-color);
             font-weight: 600;
             min-width: 120px;
+            max-width: 150px;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .consume-table .item-cell {
             color: var(--info-color);
             min-width: 180px;
+            max-width: 250px;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .consume-table .price-cell {
             color: var(--accent-color);
             font-weight: bold;
-            width: 70px;
+            width: 100px;
         }
 
         .back-btn {
@@ -232,27 +239,24 @@
             padding: 15px 0;
         }
         
-        /* 新的统计信息样式 - 只显示拍卖时间 */
-        .auction-time-info {
-            text-align: center;
-            margin: 15px 0;
-            font-size: 14px;
+        /* 修改：统计信息靠右显示，小字 */
+        .stat-info {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 12px;
             color: #6c757d;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            padding-right: 20px;
+            font-style: italic;
         }
         
-        /* 表格统计范围副标题 */
-        .stats-range-subtitle {
-            text-align: center;
+        /* 新增：标题下面的统计范围显示 */
+        .title-stats-info {
+            text-align: left;
             margin-bottom: 15px;
-            font-size: 16px;
-            color: var(--info-color);
-            font-weight: 500;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            font-size: 12px;
+            color: #6c757d;
+            font-style: italic;
+            padding-left: 20px;
         }
         
         /* 移动端适配 */
@@ -289,7 +293,7 @@
                 padding: 10px 8px;
                 font-size: 13px;
                 text-align: center;
-                white-space: nowrap; /* 移动端也防止换行 */
+                white-space: nowrap; /* 手机端也保持不换行 */
             }
             
             .consume-table .index-cell {
@@ -299,26 +303,27 @@
             
             .consume-table .bidder-cell,
             .consume-table .item-cell {
-                min-width: 100px; /* 移动端设置最小宽度 */
+                min-width: 100px;
+                max-width: 120px;
                 font-size: 12px;
             }
             
             .consume-table .price-cell {
-                width: 60px;
+                width: 80px;
                 font-size: 12px;
             }
             
-            /* 确保移动端表格可以横向滚动 */
+            /* 确保表格容器在手机端可以滑动 */
             .consume-table-container {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
             }
             
             .consume-table {
-                min-width: 600px; /* 设置表格最小宽度，确保内容完整显示 */
+                min-width: 600px; /* 增加最小宽度确保可以滑动 */
             }
             
-            /* 分页样式 */
+            /* 修改分页样式，在手机端保持一行显示 */
             .pagination {
                 flex-direction: row;
                 gap: 6px;
@@ -365,19 +370,21 @@
             
             h2#currentPeriodTitle {
                 font-size: 1.3rem;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
             }
             
-            .stats-range-subtitle {
-                font-size: 14px;
-                padding: 8px;
-                margin-bottom: 20px;
+            /* 移动端调整统计信息位置和大小 */
+            .stat-info {
+                padding-right: 12px;
+                font-size: 11px;
+                text-align: right;
             }
             
-            .auction-time-info {
-                font-size: 13px;
-                padding: 8px;
-                margin: 12px 0;
+            .title-stats-info {
+                padding-left: 12px;
+                font-size: 11px;
+                text-align: left;
+                margin-bottom: 10px;
             }
         }
         
@@ -393,11 +400,12 @@
             .consume-table .bidder-cell,
             .consume-table .item-cell {
                 min-width: 90px;
+                max-width: 110px;
                 font-size: 11px;
             }
             
             .consume-table {
-                min-width: 550px; /* 小屏幕下保持最小宽度 */
+                min-width: 550px; /* 小屏幕保持最小宽度 */
             }
             
             .pagination button,
@@ -429,13 +437,15 @@
             
             h2#currentPeriodTitle {
                 font-size: 1.2rem;
-                margin-bottom: 12px;
+                margin-bottom: 8px;
             }
             
-            .stats-range-subtitle {
-                font-size: 13px;
-                padding: 6px;
-                margin-bottom: 18px;
+            .stat-info {
+                font-size: 10px;
+            }
+            
+            .title-stats-info {
+                font-size: 10px;
             }
         }
     </style>
@@ -454,10 +464,10 @@
                 </select>
             </div>
             
-            <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 15px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
+            <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 10px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
             
-            <!-- 统计范围副标题放在这里 -->
-            <div class="stats-range-subtitle" id="statsRangeSubtitle">
+            <!-- 新增：在本轮竞拍明细下面显示统计范围 -->
+            <div class="title-stats-info" id="statsRange">
                 <!-- 统计范围将动态加载 -->
             </div>
             
@@ -477,8 +487,8 @@
                 </table>
             </div>
             
-            <!-- 拍卖时间信息放在表格和分页之间 -->
-            <div class="auction-time-info" id="auctionTimeInfo">
+            <!-- 统计范围信息（现在只显示拍卖时间，靠右显示） -->
+            <div class="stat-info" id="statInfo">
                 <!-- 拍卖时间将动态加载 -->
             </div>
             
@@ -517,8 +527,8 @@
             populatePeriodSelector();
             displayConsumeTable(currentPage);
             renderPagination();
-            updateStatsRangeDisplay(); // 更新统计范围显示（作为副标题）
-            updateAuctionTimeInfo(); // 更新拍卖时间信息（表格和分页之间）
+            updateStatsRangeDisplay(); // 更新标题下面的统计范围显示
+            updateStatInfo(); // 更新表格下方的拍卖时间显示
             
             // 绑定分页按钮事件
             document.getElementById('prevPage').addEventListener('click', prevPage);
@@ -549,13 +559,13 @@
             document.getElementById('currentPeriodTitle').textContent = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'}`;
             displayConsumeTable(currentPage);
             renderPagination();
-            updateStatsRangeDisplay(); // 更新统计范围显示
-            updateAuctionTimeInfo(); // 更新拍卖时间信息
+            updateStatsRangeDisplay(); // 更新标题下面的统计范围显示
+            updateStatInfo(); // 更新表格下方的拍卖时间显示
         }
 
-        // 显示统计范围（作为副标题）
+        // 显示统计范围（现在放在标题下面）
         function updateStatsRangeDisplay() {
-            const statsRangeElement = document.getElementById('statsRangeSubtitle');
+            const statsRangeElement = document.getElementById('statsRange');
             if (currentPeriod) {
                 const statsRange = ConsumeDataManager.getStatsRangeByPeriod(currentPeriod);
                 statsRangeElement.textContent = `印花统计范围: ${statsRange}`;
@@ -564,14 +574,14 @@
             }
         }
 
-        // 显示拍卖时间信息（表格和分页之间）
-        function updateAuctionTimeInfo() {
-            const auctionTimeElement = document.getElementById('auctionTimeInfo');
+        // 更新统计信息（现在只显示拍卖时间，靠右显示）
+        function updateStatInfo() {
+            const statInfoElement = document.getElementById('statInfo');
             if (currentPeriod) {
                 const auctionTime = ConsumeDataManager.getAuctionTimeByPeriod(currentPeriod);
-                auctionTimeElement.textContent = `拍卖时间: ${auctionTime}`;
+                statInfoElement.innerHTML = `拍卖时间: ${auctionTime}`; // 只显示拍卖时间
             } else {
-                auctionTimeElement.textContent = '';
+                statInfoElement.textContent = '';
             }
         }
 
@@ -630,6 +640,7 @@
             if (isLatestPeriod(currentPeriod)) {
                 // 显示价格列
                 priceHeader.style.display = '';
+                // 更新表头文本
                 priceHeader.textContent = '最终成交价';
             } else {
                 // 隐藏价格列
