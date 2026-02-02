@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小雨印花查询系统</title>
+    <title>小雨印花查询</title>
     <link rel="stylesheet" href="xyyh-query.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>徐</text></svg>">
 </head>
@@ -18,40 +18,19 @@
         <main class="main-content">
             <section class="search-section">
                 <div class="search-box">
-                    <input type="text" 
-                           class="search-input" 
-                           placeholder="请输入昵称（支持简繁体）" 
-                           id="searchInput"
-                           autocomplete="off"
-                           spellcheck="false"
-                           aria-label="输入要查询的昵称">
-                    <button class="search-btn" id="searchBtn" aria-label="执行搜索">🔍 查询</button>
-                </div> 
+                    <input type="text" id="searchInput" class="search-input" placeholder="输入昵称进行查询...">
+                    <button id="searchBtn" class="search-btn">🔍 查询</button>
+                </div>
+                
                 <div class="tips">
-                    💡提示：支持模糊查询，输入部分昵称即可。如果查询到多个用户，请点击选择具体用户查看详情。
+                    <p>💡 提示：输入用户昵称即可查询该用户的印花余额及详细信息</p>
                 </div>
             </section>
             
             <section class="results-section">
-                <div id="resultsContainer" role="region" aria-live="polite">
-                    <!-- 结果将动态加载到这里 -->
-                    <div class="welcome-message">
-                        <h2>欢迎使用印花查询系统</h2>
-                        <p>您可以输入昵称查询印花余额及消费记录</p>
-                        <div class="quick-stats">
-                            <div class="stat-card">
-                                <div class="stat-number" id="totalUsers">0</div>
-                                <div class="stat-label">总用户数</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="totalStamps">0</div>
-                                <div class="stat-label">总印花数</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="topUser">-</div>
-                                <div class="stat-label">最多印花</div>
-                            </div>
-                        </div>
+                <div id="resultsContainer">
+                    <div class="empty" aria-label="请输入昵称">
+                        <p>请输入昵称</p>
                     </div>
                 </div>
                 
@@ -68,6 +47,7 @@
         </main>
         
         <footer class="footer">
+            <!-- 启用按钮样式-->
             <div id="consumeBtnContainer" class="consume-link-container">
                 <a href="consume-record.html" class="consume-btn" aria-label="查看拍卖消费记录">📊 查看拍卖消费记录</a>
             </div>
@@ -80,6 +60,11 @@
     <!-- 引入印花数据文件 -->
     <script src="xyyh-data.js"></script>
     <script src="xyyh-consume-data.js"></script>
+    <script src="xyyh-shared.js"></script>
+    <script>
+        // 初始化数据管理器
+        const DataManager = new DataManager(window.stampsData);
+    </script>
     <script src="xyyh-query.js"></script>
 </body>
 </html>
