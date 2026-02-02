@@ -64,9 +64,9 @@ const ConsumeDataManager = {
                 {bidder: "pula", item: "单人拍立得-男装古装", price: 8},
                 {bidder: "在下風筝最高", item: "双人拍立得-with.鲸鱼", price: 5},
                 {bidder: "PA寶", item: "单人拍立得-游轮", price: 12},
-                {bidder: "cyannn", item: "双人拍立得-双人with.陈明峻", price: 6},
+                {bidder: "cyannn", item: "双人拍立得-with.陈明峻", price: 6},
                 {bidder: "樂樂", item: "单人拍立得-百强第一", price: 7},
-                {bidder: "在下風筝最高", item: "双人拍立得-双人with.荣耀", price: 7},
+                {bidder: "在下風筝最高", item: "双人拍立得-with.荣耀", price: 7},
                 {bidder: "小咩不乖", item: "单人拍立得-挪威夜间", price: 8},
                 {bidder: "用戶91063", item: "单人拍立得-wn妆造", price: 6},
                 {bidder: "在下風筝最高", item: "单人拍立得-挪威红房", price: 8}

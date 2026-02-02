@@ -18,42 +18,50 @@
         
         <main class="main-content" style="padding: 30px;">
             <div class="time-period-selector">
-                <label for="periodSelect">选择时间段：</label>
+                <label for="periodSelect">选择拍卖轮次：</label>
                 <select id="periodSelect" onchange="changePeriod()">
-                    <!-- 选项将通过JavaScript动态填充 -->
+                    <!-- 时段选项将通过JavaScript动态生成 -->
                 </select>
             </div>
             
-            <h2 id="currentPeriodTitle">
-                本轮竞拍明细 <span id="latestPeriodNotice" class="latest-period-notice" style="display: none;">最新 NEW</span>
-            </h2>
+            <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 10px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细 <span id="latestPeriodNotice" class="latest-period-notice" style="display: none;">✨ 最新</span></h2>
             
-            <div id="statsRange" class="title-stats-info"></div>
+            <!-- 在本轮竞拍明细下面显示统计范围 -->
+            <div class="title-stats-info" id="statsRange">
+                <!-- 统计范围将动态加载 -->
+            </div>
+            
+            <!-- 记录总数和参与人数显示 -->
+            <div class="summary-info" id="summaryInfo">
+                <!-- 总记录数和参与人数将动态加载 -->
+            </div>
             
             <div class="consume-table-container">
                 <table class="consume-table">
                     <thead>
                         <tr>
-                            <th class="index-cell">序号</th>
-                            <th class="bidder-cell">竞拍者</th>
-                            <th class="item-cell">拍品</th>
-                            <th class="price-cell">价格</th>
+                            <th class="index-cell" style="min-width: 70px;">序号</th>
+                            <th class="bidder-cell" style="min-width: 120px;">竞拍成功者</th>
+                            <th class="item-cell" style="min-width: 160px;">拍品内容</th>
+                            <th class="price-cell" style="min-width: 80px;" id="priceHeader">最终成交价</th>
                         </tr>
                     </thead>
                     <tbody id="consumeTableBody">
-                        <!-- 数据将通过JavaScript动态加载 -->
+                        <!-- 消费记录将动态加载 -->
                     </tbody>
                 </table>
             </div>
             
-            <div class="summary-info" id="summaryInfo"></div>
+            <!-- 统计范围信息（现在只显示拍卖时间，靠右显示） -->
+            <div class="stat-info" id="statInfo">
+                <!-- 拍卖时间将动态加载 -->
+            </div>
             
-            <div class="pagination">
-                <button id="prevPage" onclick="prevPage()">← 上一页</button>
-                <div class="page-numbers" id="pageNumbers">
-                    <!-- 分页按钮将通过JavaScript动态生成 -->
-                </div>
-                <button id="nextPage" onclick="nextPage()">下一页 →</button>
+            <!-- 分页控件 -->
+            <div id="paginationContainer" class="pagination" style="display: none;">
+                <button id="prevPage" title="上一页">←</button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button id="nextPage" title="下一页">→</button>
                 <div class="page-info" id="pageInfo"></div>
             </div>
             <div class="disclaimer">
@@ -70,7 +78,6 @@
     <!-- 引入消费记录数据文件 -->
     <script src="xyyh-consume-data.js"></script>
     <script src="xyyh-shared.js"></script>
-    <script src="xyyh-consume-manager.js"></script>
     <script>
         // 当前选中的时间段
         let currentPeriod = ConsumeDataManager.getDefaultPeriod();
@@ -117,7 +124,7 @@
             currentPeriod = document.getElementById('periodSelect').value;
             currentPage = 1;
             totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
-            document.getElementById('currentPeriodTitle').innerHTML = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'} <span id="latestPeriodNotice" class="latest-period-notice" style="display: none;">最新 NEW</span>`;
+            document.getElementById('currentPeriodTitle').innerHTML = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'} <span id="latestPeriodNotice" class="latest-period-notice" style="display: ${currentPeriod === latestPeriod ? 'inline-block' : 'none'};">✨ 最新</span>`;
             displayConsumeTable(currentPage);
             renderPagination();
             updateStatsRangeDisplay(); // 更新标题下面的统计范围显示
@@ -182,72 +189,95 @@
                 const colSpan = isLatestPeriod(currentPeriod) ? 4 : 3;
                 consumeTableBody.innerHTML = `
                     <tr>
-                        <td colspan="${colSpan}" class="empty">暂无数据</td>
+                        <td colspan="${colSpan}" style="text-align: center; color: #888; padding: 40px;">暂无消费记录</td>
                     </tr>
                 `;
                 return;
             }
-            
+
             let html = '';
             pageData.forEach((record, index) => {
-                const globalIndex = (page - 1) * itemsPerPage + index + 1;
-                html += `
-                    <tr>
-                        <td class="index-cell">${globalIndex}</td>
-                        <td class="bidder-cell" title="${Utils.escapeHtml(record.bidder)}">${Utils.escapeHtml(record.bidder)}</td>
-                        <td class="item-cell" title="${Utils.escapeHtml(record.item)}">${Utils.escapeHtml(record.item)}</td>
-                        <td class="price-cell">¥${record.price}</td>
-                    </tr>
-                `;
+                const globalIndex = startIndex + index + 1; // 全局序号
+                if (isLatestPeriod(currentPeriod)) {
+                    // 最新时间段显示完整信息（包括价格）
+                    html += `
+                        <tr>
+                            <td class="index-cell">${globalIndex}</td>
+                            <td class="bidder-cell">${Utils.escapeHtml(record.bidder)}</td>
+                            <td class="item-cell">${Utils.escapeHtml(record.item)}</td>
+                            <td class="price-cell">${record.price}</td>
+                        </tr>
+                    `;
+                } else {
+                    // 非最新时间段不显示价格
+                    html += `
+                        <tr>
+                            <td class="index-cell">${globalIndex}</td>
+                            <td class="bidder-cell">${Utils.escapeHtml(record.bidder)}</td>
+                            <td class="item-cell">${Utils.escapeHtml(record.item)}</td>
+                        </tr>
+                    `;
+                }
             });
-            
             consumeTableBody.innerHTML = html;
         }
 
-        // 调整表头（根据当前时间段决定是否显示第四列）
+        // 调整表头显示
         function adjustTableHeaders() {
-            const headerRow = document.querySelector('.consume-table thead tr');
-            const isLatest = isLatestPeriod(currentPeriod);
+            const priceHeader = document.getElementById('priceHeader');
             
-            // 确保表头有正确的列数
-            if (isLatest && headerRow.children.length < 4) {
-                const th = document.createElement('th');
-                th.className = 'price-cell';
-                th.textContent = '价格';
-                headerRow.appendChild(th);
-            } else if (!isLatest && headerRow.children.length > 3) {
-                headerRow.removeChild(headerRow.lastChild);
+            if (isLatestPeriod(currentPeriod)) {
+                // 显示价格列
+                priceHeader.style.display = '';
+                // 更新表头文本
+                priceHeader.textContent = '最终成交印花/个';
+            } else {
+                // 隐藏价格列
+                priceHeader.style.display = 'none';
             }
         }
 
-        // 检查是否为最新时间段
+        // 判断是否为最新时间段
         function isLatestPeriod(period) {
             return period === latestPeriod;
         }
 
-        // 渲染分页
+        // 生成分页控件
         function renderPagination() {
-            const pageNumbersDiv = document.getElementById('pageNumbers');
-            const pageInfoDiv = document.getElementById('pageInfo');
+            const paginationContainer = document.getElementById('paginationContainer');
+            const prevButton = document.getElementById('prevPage');
+            const nextButton = document.getElementById('nextPage');
+            const pageNumbersContainer = document.getElementById('pageNumbers');
+            const pageInfo = document.getElementById('pageInfo');
             
-            // 清空现有分页按钮
-            pageNumbersDiv.innerHTML = '';
+            // 清空之前的内容
+            pageNumbersContainer.innerHTML = '';
             
-            // 生成分页按钮
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            paginationContainer.style.display = 'flex';
+            
+            // 生成页码按钮
             for (let i = 1; i <= totalPages; i++) {
-                const pageNumBtn = document.createElement('button');
-                pageNumBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
-                pageNumBtn.textContent = i;
-                pageNumBtn.onclick = () => goToPage(i);
-                pageNumbersDiv.appendChild(pageNumBtn);
+                const pageButton = document.createElement('button');
+                pageButton.classList.add('page-number');
+                pageButton.textContent = i;
+                pageButton.onclick = () => goToPage(i);
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pageNumbersContainer.appendChild(pageButton);
             }
             
             // 更新页码信息
-            pageInfoDiv.textContent = `第 ${currentPage} 页，共 ${totalPages} 页`;
+            pageInfo.textContent = `第 ${currentPage} 页，共 ${totalPages} 页`;
             
-            // 更新上一页/下一页按钮状态
-            document.getElementById('prevPage').disabled = currentPage === 1;
-            document.getElementById('nextPage').disabled = currentPage === totalPages;
+            // 控制上一页下一页按钮的可用状态
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
         }
 
         // 跳转到指定页
