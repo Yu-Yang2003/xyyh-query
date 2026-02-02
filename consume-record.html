@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小雨印花消费记录</title>
     <link rel="stylesheet" href="xyyh-query.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>徐</text></svg>">
     <style>
         /* 专门用于消费记录页面的样式 */
         .consume-table-container {
@@ -282,6 +283,109 @@
             font-size: 14px;
             color: #6c757d;
             font-style: italic;
+        }
+        
+        /* 桌面端样式 */
+        @media (min-width: 1200px) {
+            .container {
+                margin: 20px auto;
+                min-height: calc(100vh - 40px);
+            }
+            
+            .main-content {
+                padding: 40px !important;
+            }
+            
+            .time-period-selector {
+                gap: 20px;
+            }
+            
+            .time-period-selector label {
+                font-size: 16px;
+            }
+            
+            .time-period-selector select {
+                min-width: 250px;
+                height: 45px;
+                font-size: 15px;
+            }
+            
+            h2#currentPeriodTitle {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+            
+            .consume-table th,
+            .consume-table td {
+                padding: 16px 14px;
+                font-size: 15px;
+            }
+            
+            .consume-table .bidder-cell,
+            .consume-table .item-cell {
+                min-width: 140px;
+                max-width: 200px;
+            }
+            
+            .consume-table .index-cell {
+                width: 60px;
+            }
+            
+            .pagination button,
+            .pagination .page-number {
+                padding: 10px 16px;
+                min-width: 45px;
+                height: 45px;
+                font-size: 15px;
+            }
+            
+            .pagination .page-info {
+                font-size: 15px;
+                min-width: 130px;
+            }
+            
+            .stat-info {
+                font-size: 14px;
+                padding-right: 40px;
+            }
+            
+            .title-stats-info {
+                font-size: 14px;
+                padding-left: 40px;
+            }
+            
+            .summary-info {
+                font-size: 15px;
+            }
+            
+            .latest-period-notice {
+                font-size: 13px;
+                padding: 5px 10px;
+                margin-left: 12px;
+            }
+            
+            .disclaimer {
+                font-size: 15px;
+                padding: 20px;
+            }
+            
+            .back-btn {
+                padding: 14px 24px;
+                font-size: 16px;
+                margin-top: 25px;
+                max-width: 320px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 平板端样式 */
+        @media (min-width: 769px) and (max-width: 1199px) {
+            .container {
+                max-width: 1000px;
+            }
         }
         
         /* 移动端适配 */

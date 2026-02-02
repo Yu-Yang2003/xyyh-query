@@ -16,47 +16,42 @@ const consumeBtnContainer = document.getElementById('consumeBtnContainer'); // �
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
         clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        timeout = setTimeout(() => func(...args), wait);
     };
 }
 
-// 完善简繁体转换映射
+// 简繁体转换映射 - 常见繁体字转换
 const traditionalToSimplified = {
-    // 常见繁体字转换
-    '寶' : '宝', '戀' : '恋', '樓' : '楼', '總' : '总', '轉' : '转',
-    '戶' : '户', '鰻' : '鳗', '魚' : '鱼', '語' : '语', '風' : '风',
-    '爭' : '争', '嵐' : '岚', '鎖' : '锁', '樂' : '乐', '開' : '开',
-    '涼' : '凉', '淺' : '浅', '夢' : '梦', '蝸' : '蜗', '車' : '车',
-    '錚' : '铮', '餅' : '饼', '羅' : '罗', '師' : '师', '趙' : '赵',
-    '歡' : '欢', '個' : '个', '撈' : '捞', '錦' : '锦', '時' : '时',
-    '孫' : '孙', '爺' : '爷', '盤' : '盘', '閃' : '闪', '貓' : '猫',
-    '財' : '财', '蘆' : '芦', '藍' : '蓝', '劉' : '刘', '陽' : '阳',
-    '醬' : '酱', '請' : '请', '執' : '执', '蘿' : '萝', '頂' : '顶',
-    '級' : '级', '庫' : '库', '飽' : '饱', '燒' : '烧', '馬' : '马',
-    '鈴' : '铃', '潛' : '潜', '龍' : '龙', '廣' : '广', '東' : '东',
-    '頭' : '头', '緬' : '缅', '寧' : '宁', '瑤' : '瑶', '吳' : '吴',
-    '彥' : '彦', '獅' : '狮', '腳' : '脚', '飼' : '饲', '喪' : '丧',
-    '錯' : '错', '褲' : '裤', '無' : '无', '尋' : '寻', '龜' : '龟',
-    '鈺' : '钰', '緯' : '纬', '間' : '间', '麼' : '么', '鯉' : '鲤',
-    '畫' : '画', '長' : '长', '紅' : '红', '蓋' : '盖', '澆' : '浇',
-    '達' : '达', '愛' : '爱', '純' : '纯', '團' : '团', '鷗' : '鸥',
-    '護' : '护', '導' : '导', '彈' : '弹', '與' : '与', '離' : '离',
-    '約' : '约', '張' : '张', '懷' : '怀', '湯' : '汤', '楊' : '杨',
-    '學' : '学', '飛' : '飞', '農' : '农', '獲' : '获', '獎' : '奖',
-    '電' : '电', '熱' : '热', '凱' : '凯', '隱' : '隐', '攬' : '揽',
-    '豬' : '猪', '盜' : '盗', '遺' : '遗', '寫' : '写', '銘' : '铭',
-    '韓' : '韩', '輝' : '辉', '檸' : '柠', '門' : '门', '衛' : '卫',
-    '結' : '结', '兒' : '儿'
+    '寶': '宝', '戀': '恋', '樓': '楼', '總': '总', '轉': '转',
+    '戶': '户', '鰻': '鳗', '魚': '鱼', '語': '语', '風': '风',
+    '爭': '争', '嵐': '岚', '鎖': '锁', '樂': '乐', '開': '开',
+    '涼': '凉', '淺': '浅', '夢': '梦', '蝸': '蜗', '車': '车',
+    '錚': '铮', '餅': '饼', '羅': '罗', '師': '师', '趙': '赵',
+    '歡': '欢', '個': '个', '撈': '捞', '錦': '锦', '時': '时',
+    '孫': '孙', '爺': '爷', '盤': '盘', '閃': '闪', '貓': '猫',
+    '財': '财', '蘆': '芦', '藍': '蓝', '劉': '刘', '陽': '阳',
+    '醬': '酱', '請': '请', '執': '执', '蘿': '萝', '頂': '顶',
+    '級': '级', '庫': '库', '飽': '饱', '燒': '烧', '馬': '马',
+    '鈴': '铃', '潛': '潜', '龍': '龙', '廣': '广', '東': '东',
+    '頭': '头', '緬': '缅', '寧': '宁', '瑤': '瑶', '吳': '吴',
+    '彥': '彦', '獅': '狮', '腳': '脚', '飼': '饲', '喪': '丧',
+    '錯': '错', '褲': '裤', '無': '无', '尋': '寻', '龜': '龟',
+    '鈺': '钰', '緯': '纬', '間': '间', '麼': '么', '鯉': '鲤',
+    '畫': '画', '長': '长', '紅': '红', '蓋': '盖', '澆': '浇',
+    '達': '达', '愛': '爱', '純': '纯', '團': '团', '鷗': '鸥',
+    '護': '护', '導': '导', '彈': '弹', '與': '与', '離': '离',
+    '約': '约', '張': '张', '懷': '怀', '湯': '汤', '楊': '杨',
+    '學': '学', '飛': '飞', '農': '农', '獲': '获', '獎': '奖',
+    '電': '电', '熱': '热', '凱': '凯', '隱': '隐', '攬': '揽',
+    '豬': '猪', '盜': '盗', '遺': '遗', '寫': '写', '銘': '铭',
+    '韓': '韩', '輝': '辉', '檸': '柠', '門': '门', '衛': '卫',
+    '結': '结', '兒': '儿'
 };
 
 // 防止XSS攻击的函数
 function escapeHtml(text) {
-    if(typeof text !== 'string') {
+    if (typeof text !== 'string') {
         return '';
     }
     const map = {
@@ -66,12 +61,12 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m] || m);
+    return text.replace(/[&<>"']/g, m => map[m]);
 }
 
 // 简繁体转换函数
 function toSimplified(text) {
-    if(typeof text !== 'string') {
+    if (typeof text !== 'string') {
         return '';
     }
     return text.split('').map(char => traditionalToSimplified[char] || char).join('');
@@ -79,23 +74,14 @@ function toSimplified(text) {
 
 // 计算每个用户的消费金额
 function calculateUserConsumption() {
-    // 创建一个对象存储每个用户的消费总额
     const consumptionMap = {};
     
-    // 遍历最新时间段的数据
     if (typeof ConsumeDataManager !== 'undefined') {
         const latestPeriod = ConsumeDataManager.getLatestPeriod();
-        if(latestPeriod) {
+        if (latestPeriod) {
             const latestData = ConsumeDataManager.getDataByPeriod(latestPeriod);
             latestData.forEach(record => {
-                const bidder = record.bidder;
-                const price = record.price;
-                
-                if (consumptionMap[bidder]) {
-                    consumptionMap[bidder] += price;
-                } else {
-                    consumptionMap[bidder] = price;
-                }
+                consumptionMap[record.bidder] = (consumptionMap[record.bidder] || 0) + record.price;
             });
         }
     }
@@ -105,7 +91,6 @@ function calculateUserConsumption() {
 
 // 更新印花数据中的消费记录 - 已改为使用外部数据源
 function updateStampDataWithConsumeRecords() {
-    // 计算最新时间段的消费记录
     const consumptionMap = calculateUserConsumption();
     
     // 重置所有用户的本轮消费记录
@@ -117,12 +102,11 @@ function updateStampDataWithConsumeRecords() {
     for (const [bidder, totalConsumption] of Object.entries(consumptionMap)) {
         const userIndex = stampData.findIndex(user => user.nickname === bidder);
         if (userIndex !== -1) {
-            // 设置该用户的消费记录
             stampData[userIndex].current_round_used = totalConsumption;
             // 重新计算剩余印花
-            stampData[userIndex].current_round_remaining = 
-                stampData[userIndex].prev_round_stamps + 
-                stampData[userIndex].current_round_earned - 
+            stampData[userIndex].current_round_remaining =
+                stampData[userIndex].prev_round_stamps +
+                stampData[userIndex].current_round_earned -
                 stampData[userIndex].current_round_used;
         }
     }
@@ -179,9 +163,8 @@ function searchUsers() {
             const results = stampData.filter(user => {
                 // 将用户昵称转换为简体进行匹配
                 const simplifiedNickname = toSimplified(user.nickname.toLowerCase());
-                return simplifiedNickname.includes(simplifiedSearch) || 
-                       user.nickname.toLowerCase().includes(nickname.toLowerCase()) ||
-                       user.nickname.toLowerCase().indexOf(nickname.toLowerCase()) !== -1;
+                return simplifiedNickname.includes(simplifiedSearch) ||
+                       user.nickname.toLowerCase().includes(nickname.toLowerCase());
             });
 
             displaySearchResults(results);
@@ -320,7 +303,7 @@ function attachResultListeners() {
 function getUserConsumeRecords(nickname) {
     if (typeof ConsumeDataManager !== 'undefined') {
         const latestPeriod = ConsumeDataManager.getLatestPeriod();
-        if(latestPeriod) {
+        if (latestPeriod) {
             const latestData = ConsumeDataManager.getDataByPeriod(latestPeriod);
             return latestData.filter(record => record.bidder === nickname);
         }
@@ -392,22 +375,6 @@ function showUserDetail(user) {
     }
 }
 
-// 显示消费详情弹窗
-function showConsumePopup(element) {
-    const popup = element.querySelector('.consume-popup');
-    if (popup) {
-        popup.style.display = 'block';
-    }
-}
-
-// 隐藏消费详情弹窗
-function hideConsumePopup(element) {
-    const popup = element.querySelector('.consume-popup');
-    if (popup) {
-        popup.style.display = 'none';
-    }
-}
-
 // 显示错误
 function showError(message) {
     resultsContainer.innerHTML = `
@@ -416,7 +383,6 @@ function showError(message) {
         </div>
     `;
 }
-
 
 // 事件监听
 searchBtn.addEventListener('click', searchUsers);
@@ -488,8 +454,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-// 不再使用内联事件，因此不暴露额外全局函数
 
 // 初始状态
 resultsContainer.innerHTML = `
