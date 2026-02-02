@@ -64,9 +64,9 @@ const ConsumeDataManager = {
                 {bidder: "pula", item: "单人拍立得-男装古装", price: 8},
                 {bidder: "在下風筝最高", item: "双人拍立得-with.鲸鱼", price: 5},
                 {bidder: "PA寶", item: "单人拍立得-游轮", price: 12},
-                {bidder: "cyannn", item: "双人拍立得-with.陈明峻", price: 6},
+                {bidder: "cyannn", item: "双人拍立得-双人with.陈明峻", price: 6},
                 {bidder: "樂樂", item: "单人拍立得-百强第一", price: 7},
-                {bidder: "在下風筝最高", item: "双人拍立得-with.荣耀", price: 7},
+                {bidder: "在下風筝最高", item: "双人拍立得-双人with.荣耀", price: 7},
                 {bidder: "小咩不乖", item: "单人拍立得-挪威夜间", price: 8},
                 {bidder: "用戶91063", item: "单人拍立得-wn妆造", price: 6},
                 {bidder: "在下風筝最高", item: "单人拍立得-挪威红房", price: 8}
@@ -95,27 +95,47 @@ const ConsumeDataManager = {
                 {bidder: "PA寶", item: "单人拍立得-挪威", price: 10}
             ]
         },
+        // 在这里添加新的时间段，例如：
+        // "第四轮拍卖": {
+        //     statsRange: "2026年1月 ~ 2026年2月", // 【需要录入拍卖的统计范围】
+        //     auctionTime: "2026年3月15日", // 【需要录入拍卖时间】
+        //     records: [
+        //         {bidder: "新 bidder", item: "新拍品名称", price: 价格},
+        //         {bidder: "另一个用户", item: "另一个拍品", price: 价格}
+        //     ]
+        // }
     },
 
     // 获取所有时间段
-    getPeriods: () => Object.keys(ConsumeDataManager.data),
+    getPeriods: function() {
+        return Object.keys(this.data);
+    },
 
     // 获取特定时间段的数据
-    getDataByPeriod: (period) => ConsumeDataManager.data[period]?.records || [],
+    getDataByPeriod: function(period) {
+        const periodData = this.data[period];
+        return periodData ? periodData.records : [];
+    },
 
     // 获取特定时间段的统计范围
-    getStatsRangeByPeriod: (period) => ConsumeDataManager.data[period]?.statsRange || "",
+    getStatsRangeByPeriod: function(period) {
+        const periodData = this.data[period];
+        return periodData ? periodData.statsRange : "";
+    },
 
     // 获取特定时间段的拍卖时间
-    getAuctionTimeByPeriod: (period) => ConsumeDataManager.data[period]?.auctionTime || "",
+    getAuctionTimeByPeriod: function(period) {
+        const periodData = this.data[period];
+        return periodData ? periodData.auctionTime : "";
+    },
 
     // 添加新时间段
-    addPeriod: (periodName, statsRange, auctionTime, records = []) => {
-        if (!ConsumeDataManager.data[periodName]) {
-            ConsumeDataManager.data[periodName] = {
-                statsRange,
-                auctionTime,
-                records
+    addPeriod: function(periodName, statsRange, auctionTime, records = []) {
+        if (!this.data[periodName]) {
+            this.data[periodName] = {
+                statsRange: statsRange,
+                auctionTime: auctionTime,
+                records: records
             };
             return true;
         }
@@ -123,38 +143,48 @@ const ConsumeDataManager = {
     },
 
     // 向现有时间段添加新记录
-    addRecordsToPeriod: (periodName, newRecords) => {
-        if (ConsumeDataManager.data[periodName]) {
-            ConsumeDataManager.data[periodName].records.push(...newRecords);
+    addRecordsToPeriod: function(periodName, newRecords) {
+        if (this.data[periodName]) {
+            this.data[periodName].records = [...this.data[periodName].records, ...newRecords];
             return true;
         }
         return false; // 时间段不存在
     },
 
     // 获取第一个时间段（默认显示）
-    getDefaultPeriod: () => {
-        const periods = ConsumeDataManager.getPeriods();
+    getDefaultPeriod: function() {
+        const periods = this.getPeriods();
         return periods.length > 0 ? periods[0] : null;
     },
     
     // 获取最新时间段
-    getLatestPeriod: () => {
-        const periods = ConsumeDataManager.getPeriods();
+    getLatestPeriod: function() {
+        const periods = this.getPeriods();
         if (periods.length === 0) return null;
         // 按时间排序，最新的时间段排在最后
-        return periods.sort((a, b) => {
+        periods.sort((a, b) => {
             // 按拍卖轮次排序，数字大的排在前面
             const getRoundNumber = (str) => {
                 const match = str.match(/第(.+?)轮拍卖/);
                 if (match) {
                     const roundText = match[1];
-                    const numbers = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9};
-                    return numbers[roundText] || parseInt(roundText) || 0;
+                    if (roundText === "一") return 1;
+                    if (roundText === "二") return 2;
+                    if (roundText === "三") return 3;
+                    if (roundText === "四") return 4;
+                    if (roundText === "五") return 5;
+                    if (roundText === "六") return 6;
+                    if (roundText === "七") return 7;
+                    if (roundText === "八") return 8;
+                    if (roundText === "九") return 9;
+                    // 如果是数字形式
+                    return parseInt(roundText) || 0;
                 }
                 return 0;
             };
             return getRoundNumber(b) - getRoundNumber(a);
-        })[0]; // 返回最新的时间段
+        });
+        return periods[0]; // 返回最新的时间段
     }
 
 };

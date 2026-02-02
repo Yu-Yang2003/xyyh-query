@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小雨印花查询</title>
+    <title>小雨印花查询系统</title>
     <link rel="stylesheet" href="xyyh-query.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>徐</text></svg>">
 </head>
 <body>
     <div class="container">
         <header class="header">
             <div class="header-content">
                 <h1>🏷️ 小雨印花查询系统</h1>
+                <p>当前统计时间段：2025年11月 ~ 2025年12月</p>
             </div>
         </header>
         
         <main class="main-content">
             <section class="search-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" class="search-input" placeholder="输入昵称进行查询...">
-                    <button id="searchBtn" class="search-btn">🔍 查询</button>
-                </div>
-                
+                    <input type="text" 
+                           class="search-input" 
+                           placeholder="请输入昵称（支持简繁体）" 
+                           id="searchInput"
+                           autocomplete="off"
+                           spellcheck="false"
+                           aria-label="输入要查询的昵称">
+                    <button class="search-btn" id="searchBtn" aria-label="执行搜索">🔍 查询</button>
+                </div> 
                 <div class="tips">
-                    <p>💡 提示：输入用户昵称即可查询该用户的印花余额及详细信息</p>
+                    💡提示：支持模糊查询，输入部分昵称即可。如果查询到多个用户，请点击选择具体用户查看详情。
                 </div>
             </section>
             
             <section class="results-section">
-                <div id="resultsContainer">
-                    <div class="empty" aria-label="请输入昵称">
-                        <p>请输入昵称</p>
-                    </div>
+                <div id="resultsContainer" role="region" aria-live="polite">
+                    <!-- 结果将动态加载到这里 -->
                 </div>
                 
                 <div class="user-detail" id="userDetail" aria-hidden="true">
@@ -47,12 +50,11 @@
         </main>
         
         <footer class="footer">
-            <!-- 启用按钮样式-->
             <div id="consumeBtnContainer" class="consume-link-container">
-                <a href="consume-record.html" class="consume-btn" aria-label="查看拍卖消费记录">📊 查看拍卖消费记录</a>
+                <a href="consume-record.html" class="consume-btn" aria-label="查看拍卖消费记录">查看拍卖消费记录</a>
             </div>
             <div class="footer-info">
-                <p>小雨印花查询系统 © 2026 | 数据更新至 2025年12月</p>
+                <p>小雨印花查询系统 © 2026</p>
             </div>
         </footer>
     </div>
@@ -60,11 +62,6 @@
     <!-- 引入印花数据文件 -->
     <script src="xyyh-data.js"></script>
     <script src="xyyh-consume-data.js"></script>
-    <script src="xyyh-shared.js"></script>
-    <script>
-        // 初始化数据管理器
-        const DataManager = new DataManager(window.stampsData);
-    </script>
     <script src="xyyh-query.js"></script>
 </body>
 </html>
