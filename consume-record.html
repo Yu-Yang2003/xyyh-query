@@ -262,6 +262,28 @@
             padding-left: 20px;
         }
         
+        /* 新增：标题旁边的最新轮次提示 */
+        .latest-period-notice {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        /* 新增：记录总数和参与人数显示 */
+        .summary-info {
+            text-align: center;
+            margin: 10px 0 15px;
+            font-size: 14px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
         /* 移动端适配 */
         @media (max-width: 768px) {
             .container {
@@ -393,6 +415,19 @@
                 text-align: left;
                 margin-bottom: 10px;
             }
+            
+            /* 移动端适配最新轮次提示 */
+            .latest-period-notice {
+                font-size: 11px;
+                padding: 3px 6px;
+                margin-left: 8px;
+            }
+            
+            /* 移动端适配记录总数和参与人数显示 */
+            .summary-info {
+                font-size: 13px;
+                margin: 8px 0 12px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -461,6 +496,16 @@
                 padding: 0 5px;
                 width: calc(100% + 10px);
             }
+            
+            .latest-period-notice {
+                font-size: 10px;
+                padding: 2px 5px;
+                margin-left: 6px;
+            }
+            
+            .summary-info {
+                font-size: 12px;
+            }
         }
         
         /* 优化表格内容居中 */
@@ -486,7 +531,7 @@
     <div class="container">
         <header class="header">
             <div class="header-content">
-                <h1>🏷️小雨印花消费记录</h1>
+                <h1>🏷️ 小雨印花消费记录</h1>
             </div>
         </header>
         
@@ -498,11 +543,16 @@
                 </select>
             </div>
             
-            <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 10px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细</h2>
+            <h2 id="currentPeriodTitle" style="text-align: center; margin-bottom: 10px; color: var(--dark-text); font-weight: 600;">本轮竞拍明细 <span id="latestPeriodNotice" class="latest-period-notice" style="display: none;">最新 NEW</span></h2>
             
             <!-- 在本轮竞拍明细下面显示统计范围 -->
             <div class="title-stats-info" id="statsRange">
                 <!-- 统计范围将动态加载 -->
+            </div>
+            
+            <!-- 记录总数和参与人数显示 -->
+            <div class="summary-info" id="summaryInfo">
+                <!-- 总记录数和参与人数将动态加载 -->
             </div>
             
             <div class="consume-table-container">
@@ -563,6 +613,8 @@
             renderPagination();
             updateStatsRangeDisplay(); // 更新标题下面的统计范围显示
             updateStatInfo(); // 更新表格下方的拍卖时间显示
+            updateSummaryInfo(); // 更新记录总数和参与人数
+            updateLatestPeriodNotice(); // 更新最新轮次提示
             
             // 绑定分页按钮事件
             document.getElementById('prevPage').addEventListener('click', prevPage);
@@ -590,11 +642,13 @@
             currentPeriod = document.getElementById('periodSelect').value;
             currentPage = 1;
             totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
-            document.getElementById('currentPeriodTitle').textContent = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'}`;
+            document.getElementById('currentPeriodTitle').innerHTML = `${currentPeriod.includes('本轮') ? '本轮竞拍明细' : currentPeriod + ' 竞拍明细'} <span id="latestPeriodNotice" class="latest-period-notice" style="display: none;">最新 NEW</span>`;
             displayConsumeTable(currentPage);
             renderPagination();
             updateStatsRangeDisplay(); // 更新标题下面的统计范围显示
             updateStatInfo(); // 更新表格下方的拍卖时间显示
+            updateSummaryInfo(); // 更新记录总数和参与人数
+            updateLatestPeriodNotice(); // 更新最新轮次提示
         }
 
         // 显示统计范围（现在放在标题下面）
@@ -616,6 +670,25 @@
                 statInfoElement.innerHTML = `本轮拍卖时间 :  ${auctionTime}`; // 只显示拍卖时间
             } else {
                 statInfoElement.textContent = '';
+            }
+        }
+
+        // 更新记录总数和参与人数
+        function updateSummaryInfo() {
+            const records = ConsumeDataManager.getDataByPeriod(currentPeriod);
+            const totalRecords = records.length;
+            const participatingUsers = [...new Set(records.map(record => record.bidder))].length;
+
+            document.getElementById('summaryInfo').innerHTML = `共找到 ${totalRecords} 条记录，${participatingUsers} 人参与`;
+        }
+
+        // 更新最新轮次提示
+        function updateLatestPeriodNotice() {
+            const noticeElement = document.getElementById('latestPeriodNotice');
+            if (currentPeriod === latestPeriod) {
+                noticeElement.style.display = 'inline-block';
+            } else {
+                noticeElement.style.display = 'none';
             }
         }
 
@@ -728,6 +801,7 @@
             currentPage = page;
             displayConsumeTable(currentPage);
             renderPagination();
+            updateSummaryInfo(); // 更新记录总数和参与人数
         }
 
         // 上一页
@@ -736,6 +810,7 @@
                 currentPage--;
                 displayConsumeTable(currentPage);
                 renderPagination();
+                updateSummaryInfo(); // 更新记录总数和参与人数
             }
         }
 
@@ -745,11 +820,15 @@
                 currentPage++;
                 displayConsumeTable(currentPage);
                 renderPagination();
+                updateSummaryInfo(); // 更新记录总数和参与人数
             }
         }
 
         // 防止XSS攻击的函数
         function escapeHtml(text) {
+            if(typeof text !== 'string') {
+                return '';
+            }
             const map = {
                 '&': '&amp;',
                 '<': '&lt;',
@@ -762,6 +841,9 @@
 
         // 简繁体转换函数
         function toSimplified(text) {
+            if(typeof text !== 'string') {
+                return '';
+            }
             const traditionalToSimplified = {
                 '寶' : '宝', '戀' : '恋', '樓' : '楼', '總' : '总', '轉' : '转',
                 '戶' : '户', '鰻' : '鳗', '魚' : '鱼', '語' : '语', '風' : '风',
@@ -811,6 +893,8 @@
                 if (currentPeriod === periodName) {
                     totalPages = Math.ceil(ConsumeDataManager.getDataByPeriod(currentPeriod).length / itemsPerPage);
                     renderPagination();
+                    updateSummaryInfo(); // 更新记录总数和参与人数
+                    updateLatestPeriodNotice(); // 更新最新轮次提示
                 }
             } else {
                 console.error(`时间段 "${periodName}" 不存在`);
@@ -819,5 +903,4 @@
     </script>
 
 </body>
-
 </html>

@@ -1,36 +1,6 @@
 // ==================== 印花数据现在从外部文件导入 ====================
 
-// 消费记录数据 - 从外部数据源获取，不需要定义本地的consumeData数组
-// 更新印花数据中的消费记录 - 使用外部数据源的数据
-function updateStampDataWithConsumeRecords() {
-    // 重置所有用户的本轮消费记录
-    stampData.forEach(user => {
-        user.current_round_used = 0;
-    });
-
-    // 使用ConsumeDataManager获取最新的消费记录
-    if (typeof ConsumeDataManager !== 'undefined') {
-        const latestPeriod = ConsumeDataManager.getLatestPeriod();
-        if(latestPeriod) {
-            const latestData = ConsumeDataManager.getDataByPeriod(latestPeriod);
-            latestData.forEach(record => {
-                const userIndex = stampData.findIndex(user => user.nickname === record.bidder);
-                if (userIndex !== -1) {
-                    // 累加该用户的消费记录
-                    stampData[userIndex].current_round_used += record.price;
-                    // 重新计算剩余印花
-                    stampData[userIndex].current_round_remaining = 
-                        stampData[userIndex].prev_round_stamps + 
-                        stampData[userIndex].current_round_earned - 
-                        stampData[userIndex].current_round_used;
-                }
-            });
-        }
-    }
-}
-
-// 初始化时更新数据
-updateStampDataWithConsumeRecords(); // 取消注释以启用此功能
+// 消费记录数据由外部数据源提供（使用下面统一的更新函数）
 
 // DOM元素
 const searchInput = document.getElementById('searchInput');
@@ -229,6 +199,19 @@ function sortResults(results) {
     return results.sort((a, b) => b.current_round_remaining - a.current_round_remaining);
 }
 
+// 显示欢迎消息和统计数据
+function showWelcomeMessage() {
+    // 计算统计数据
+    const totalUsers = stampData.length;
+    const totalStamps = stampData.reduce((sum, user) => sum + user.current_round_remaining, 0);
+    const topUser = stampData.reduce((top, user) => user.current_round_remaining > top.current_round_remaining ? user : top, stampData[0]);
+    
+    // 更新统计显示
+    document.getElementById('totalUsers').textContent = totalUsers;
+    document.getElementById('totalStamps').textContent = totalStamps;
+    document.getElementById('topUser').textContent = `${toSimplified(topUser.nickname)} (${topUser.current_round_remaining})`;
+}
+
 // 显示搜索结果
 function displaySearchResults(results) {
     // 先对结果进行排序
@@ -262,14 +245,11 @@ function displaySearchResults(results) {
     `;
 
     results.forEach(user => {
-        // 在显示结果时将昵称转换为简体
         const simplifiedNickname = toSimplified(user.nickname);
-        // 检查是否有消费记录
         const hasConsumption = user.current_round_used > 0;
-        // 获取用户的消费记录（如果有的话）
         const userConsumeRecords = getUserConsumeRecords(user.nickname);
         html += `
-            <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')" role="option" tabindex="0" aria-selected="false">
+            <li class="user-item" data-nickname="${escapeHtml(user.nickname)}" role="option" tabindex="0" aria-selected="false">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
                     剩余印花: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
@@ -278,7 +258,7 @@ function displaySearchResults(results) {
                     `
                 </div>
                 ${hasConsumption ? `
-                <div class="consume-details-popup" onmouseenter="showConsumePopup(this)" onmouseleave="hideConsumePopup(this)">
+                <div class="consume-details-popup">
                     <div class="consume-popup" style="display: none;">
                         <div style="font-weight: 600; margin-bottom: 8px; color: #2c3e50;">消费详情</div>
                         ${userConsumeRecords.map(record => `
@@ -296,6 +276,44 @@ function displaySearchResults(results) {
 
     html += '</ul>';
     resultsContainer.innerHTML = html;
+
+    // 添加事件委托和弹窗监听
+    attachResultListeners();
+}
+
+// 为结果列表添加事件委托和弹窗鼠标监听
+function attachResultListeners() {
+    // 点击或按回车打开详情
+    resultsContainer.addEventListener('click', function (e) {
+        const li = e.target.closest('.user-item');
+        if (li && resultsContainer.contains(li)) {
+            const nick = li.getAttribute('data-nickname');
+            if (nick) showUserDetailByNickname(nick);
+        }
+    });
+
+    resultsContainer.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            const li = e.target.closest('.user-item');
+            if (li && resultsContainer.contains(li)) {
+                const nick = li.getAttribute('data-nickname');
+                if (nick) showUserDetailByNickname(nick);
+            }
+        }
+    });
+
+    // 悬停显示消费弹窗
+    const popups = resultsContainer.querySelectorAll('.consume-details-popup');
+    popups.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            const popup = el.querySelector('.consume-popup');
+            if (popup) popup.style.display = 'block';
+        });
+        el.addEventListener('mouseleave', () => {
+            const popup = el.querySelector('.consume-popup');
+            if (popup) popup.style.display = 'none';
+        });
+    });
 }
 
 // 获取用户的消费记录
@@ -438,6 +456,7 @@ closeDetail.addEventListener('click', () => {
 // 页面加载完成后自动聚焦到搜索框
 document.addEventListener('DOMContentLoaded', function() {
     searchInput.focus();
+    showWelcomeMessage(); // 显示欢迎消息和统计数据
 
     // 添加ESC键关闭详情功能
     document.addEventListener('keydown', function(e) {
@@ -470,10 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// 将函数暴露给全局作用域，供onclick使用
-window.showUserDetailByNickname = showUserDetailByNickname;
-window.showConsumePopup = showConsumePopup;  // 取消注释以启用此功能
-window.hideConsumePopup = hideConsumePopup;  // 取消注释以启用此功能
+// 不再使用内联事件，因此不暴露额外全局函数
 
 // 初始状态
 resultsContainer.innerHTML = `
