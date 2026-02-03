@@ -4,7 +4,7 @@ const ConsumeDataManager = {
     // 【录入最新数据的位置】在这里添加新的时间段和数据
     data: {
         "第四轮拍卖": {
-            statsRange: "2025年11月 ~ 2025年12月", // 【需要录入拍卖的统计范围】
+            statsRange: "2025年11月 ~ 2026年1月", // 【需要录入拍卖的统计范围】
             auctionTime: "不出意外的话应该在2026年2月的某一天", // 【需要录入拍卖时间】
             records: [
                 {bidder: "xyy", item: "单人拍立得-小卡妆造", price: 5},
