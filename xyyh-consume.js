@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('prevPage').addEventListener('click', prevPage);
     document.getElementById('nextPage').addEventListener('click', nextPage);
 
-    // 添加移动端滑动事件监听
-    addSwipeListener();
+    // 移除移动端滑动事件监听（不再支持滑动切换表格）
+    // addSwipeListener(); 
 });
 
 // 填充时间段选择器
@@ -64,7 +64,7 @@ function changePeriod() {
     updateStatInfo(); // 更新表格下方的拍卖时间显示
     updateParticipationInfo(); // 更新表格下方的参与信息显示
 
-    // 滚动到表格最左侧
+    // 滚动到表格最左侧（新增逻辑）
     scrollToTableStart();
 }
 
@@ -307,65 +307,7 @@ function addNewRecords(periodName, newRecords) {
     }
 }
 
-// 添加移动端滑动事件监听
-function addSwipeListener() {
-    let startX = 0;
-    let endX = 0;
-
-    document.addEventListener('touchstart', function(event) {
-        startX = event.touches[0].clientX;
-    });
-
-    document.addEventListener('touchend', function(event) {
-        endX = event.changedTouches[0].clientX;
-        handleSwipe();
-    });
-
-    function handleSwipe() {
-        const swipeThreshold = 50; // 滑动阈值
-        const diffX = startX - endX;
-
-        if (Math.abs(diffX) > swipeThreshold) {
-            if (diffX > 0) {
-                // 向左滑动，切换到下一个时间段
-                switchToNextPeriod();
-            } else {
-                // 向右滑动，切换到上一个时间段
-                switchToPrevPeriod();
-            }
-        }
-    }
-}
-
-// 切换到下一个时间段
-function switchToNextPeriod() {
-    const periods = ConsumeDataManager.getPeriods();
-    const currentIndex = periods.indexOf(currentPeriod);
-    if (currentIndex < periods.length - 1) {
-        currentPeriod = periods[currentIndex + 1];
-        updatePeriodSelect();
-        changePeriod();
-    }
-}
-
-// 切换到上一个时间段
-function switchToPrevPeriod() {
-    const periods = ConsumeDataManager.getPeriods();
-    const currentIndex = periods.indexOf(currentPeriod);
-    if (currentIndex > 0) {
-        currentPeriod = periods[currentIndex - 1];
-        updatePeriodSelect();
-        changePeriod();
-    }
-}
-
-// 更新时间段选择器
-function updatePeriodSelect() {
-    const periodSelect = document.getElementById('periodSelect');
-    periodSelect.value = currentPeriod;
-}
-
-// 滚动到表格最左侧
+// 滚动到表格最左侧（新增函数）
 function scrollToTableStart() {
     const table = document.querySelector('.consume-table'); // 假设表格有一个类名为 consume-table
     if (table) {
