@@ -1,0 +1,520 @@
+        /* 专门用于消费记录页面的样式 */
+        .consume-table-container {
+            margin-top: 20px;
+            overflow-x: auto; /* 确保可以左右滑动 */
+            -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 100vw;
+            -ms-overflow-style: -ms-autohiding-scrollbar; /* IE和Edge的滚动条处理 */
+        }
+
+        .consume-table {
+            width: 100%;
+            min-width: 500px; /* 确保表格有最小宽度，在手机端可以滑动 */
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+        }
+
+        .consume-table th,
+        .consume-table td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            white-space: nowrap; /* 防止单元格内容换行 */
+        }
+
+        .consume-table th {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .consume-table tbody tr {
+            background-color: white;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .consume-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .consume-table tbody tr:hover {
+            background-color: #f0f7ff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2;
+        }
+
+        .consume-table .index-cell {
+            font-weight: bold;
+            color: var(--primary-gradient-end);
+            width: 50px;
+        }
+
+        .consume-table .bidder-cell {
+            color: var(--success-color);
+            font-weight: 600;
+            min-width: 120px;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .consume-table .item-cell {
+            color: var(--info-color);
+            min-width: 180px;
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .consume-table .price-cell {
+            color: var(--accent-color);
+            font-weight: bold;
+            width: 100px;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 280px;
+            justify-content: center;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .back-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0 20px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .pagination button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .pagination .page-info {
+            font-size: 14px;
+            color: var(--dark-text);
+            min-width: 110px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .pagination .page-numbers {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .pagination .page-number {
+            background: #e9ecef;
+            color: var(--dark-text);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination .page-number.active {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .pagination .page-number:hover:not(.active) {
+            background: #dde1e4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .time-period-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .time-period-selector label {
+            font-weight: 600;
+            color: var(--dark-text);
+            white-space: nowrap;
+            font-size: 15px;
+        }
+        
+        .time-period-selector select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #ced4da;
+            background-color: white;
+            font-size: 14px;
+            min-width: 200px;
+            height: 40px;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .time-period-selector select:focus {
+            border-color: var(--primary-gradient-start);
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.25);
+        }
+        
+        .header {
+            text-align: center;
+            padding: 15px 0;
+        }
+        
+        /* 修改：统计信息靠右显示，小字 */
+        .stat-info {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #6c757d;
+            padding-right: 20px;
+            font-style: italic;
+        }
+        
+        /* 新增：标题下面的统计范围显示 */
+        .title-stats-info {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #6c757d;
+            font-style: italic;
+            padding-left: 20px;
+        }
+        
+        /* 新增：最新轮提示样式 */
+        .latest-period-indicator {
+            display: inline-block;
+            margin-left: 5px;
+            background-color:#4CAF50/*rgb(202,30,228)*/; 
+            color: #333; /* 深色文字 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.5em;
+            font-weight: normal;
+        }
+        
+        /* 新增：参与信息样式 */
+        .participation-info {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6c757d;
+            padding-right: 20px;
+            font-style: italic;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 5px;
+                border-radius: 12px;
+            }
+            
+            .main-content {
+                padding: 20px 12px !important;
+                overflow-x: hidden; /* 防止主内容区水平滚动 */
+            }
+            
+            .time-period-selector {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+            }
+            
+            .time-period-selector label {
+                text-align: center;
+                font-size: 14px;
+            }
+            
+            .time-period-selector select {
+                min-width: auto;
+                width: 100%;
+                font-size: 13px;
+                height: 38px;
+            }
+            
+            .consume-table th,
+            .consume-table td {
+                padding: 10px 8px;
+                font-size: 13px;
+                text-align: center;
+                white-space: nowrap; /* 手机端也保持不换行 */
+            }
+            
+            .consume-table .index-cell {
+                width: 35px;
+                font-size: 12px;
+            }
+            
+            .consume-table .bidder-cell,
+            .consume-table .item-cell {
+                min-width: 100px;
+                max-width: 120px;
+                font-size: 12px;
+            }
+            
+            .consume-table .price-cell {
+                width: 80px;
+                font-size: 12px;
+            }
+            
+            /* 确保表格容器在手机端可以滑动 */
+            .consume-table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 -12px; /* 补偿主内容区的内边距 */
+                padding: 0 12px; /* 内边距防止内容贴边 */
+                width: calc(100% + 24px); /* 超出容器宽度以允许滚动 */
+            }
+            
+            .consume-table {
+                min-width: 600px; /* 增加最小宽度确保可以滑动 */
+            }
+            
+            /* 修改分页样式，在手机端保持一行显示 */
+            .pagination {
+                flex-direction: row;
+                gap: 6px;
+            }
+            
+            .pagination .page-numbers {
+                order: unset;
+                justify-content: center;
+            }
+            
+            .pagination .page-info {
+                order: unset;
+                margin: 0 8px;
+                font-size: 13px;
+                min-width: 90px;
+            }
+            
+            .pagination button,
+            .pagination .page-number {
+                padding: 6px 10px;
+                min-width: 36px;
+                height: 36px;
+                font-size: 13px;
+            }
+            
+            .disclaimer {
+                font-size: 13px;
+                padding: 12px;
+            }
+            
+            .back-btn {
+                padding: 10px 18px;
+                font-size: 14px;
+                margin-top: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            h2#currentPeriodTitle {
+                font-size: 1.3rem;
+                margin-bottom: 10px;
+            }
+            
+            /* 移动端调整统计信息位置和大小 */
+            .stat-info {
+                padding-right: 12px;
+                font-size: 11px;
+                text-align: right;
+            }
+            
+            .title-stats-info {
+                padding-left: 12px;
+                font-size: 11px;
+                text-align: left;
+                margin-bottom: 10px;
+            }
+            
+            /* 移动端调整参与信息位置和大小 */
+            .participation-info {
+                padding-right: 12px;
+                font-size: 11px;
+                text-align: right;
+            }
+            
+            /* 移动端调整最新轮提示大小 */
+            .latest-period-indicator {
+                padding: 1px 4px;
+                font-size: 0.7em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .consume-table th,
+            .consume-table td {
+                padding: 8px 6px;
+                font-size: 12px;
+                text-align: center;
+                white-space: nowrap;
+            }
+            
+            .consume-table .bidder-cell,
+            .consume-table .item-cell {
+                min-width: 90px;
+                max-width: 110px;
+                font-size: 11px;
+            }
+            
+            .consume-table {
+                min-width: 550px; /* 小屏幕保持最小宽度 */
+            }
+            
+            .pagination button,
+            .pagination .page-number {
+                padding: 5px 8px;
+                min-width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+            
+            .time-period-selector select {
+                font-size: 12px;
+                height: 36px;
+            }
+            
+            .disclaimer {
+                font-size: 11px;
+                padding: 10px;
+            }
+            
+            .back-btn {
+                padding: 9px 16px;
+                font-size: 13px;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            
+            h2#currentPeriodTitle {
+                font-size: 1.2rem;
+                margin-bottom: 8px;
+            }
+            
+            .stat-info {
+                font-size: 10px;
+            }
+            
+            .title-stats-info {
+                font-size: 10px;
+            }
+            
+            /* 特别针对超小屏幕优化表格容器 */
+            .consume-table-container {
+                margin: 0 -5px;
+                padding: 0 5px;
+                width: calc(100% + 10px);
+            }
+            
+            /* 超小屏幕调整最新轮提示 */
+            .latest-period-indicator {
+                padding: 1px 3px;
+                font-size: 0.6em;
+            }
+            
+            /* 超小屏幕调整参与信息 */
+            .participation-info {
+                font-size: 10px;
+            }
+        }
+        
+        /* 优化表格内容居中 */
+        .consume-table .index-cell,
+        .consume-table .bidder-cell,
+        .consume-table .item-cell,
+        .consume-table .price-cell {
+            text-align: center;
+        }
+        
+        /* 为表格添加更多视觉层次 */
+        .consume-table tbody tr:nth-child(odd):not(:hover) {
+            background-color: #ffffff;
+        }
+        
+        /* 为移动端增加触摸反馈 */
+        .consume-table tbody tr:active {
+            background-color: #e3f2fd;
+        }

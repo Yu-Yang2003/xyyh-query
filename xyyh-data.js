@@ -18,7 +18,7 @@ const stampData = [
 {"nickname":"迪士尼公主","prev_round_stamps":19,"current_round_earned":10,"current_round_used":0,"current_round_remaining":29},
 {"nickname":"木魚喂喂喂","prev_round_stamps":19,"current_round_earned":9,"current_round_used":0,"current_round_remaining":28},
 {"nickname":"不吃鰻魚","prev_round_stamps":19,"current_round_earned":7,"current_round_used":0,"current_round_remaining":26},
-{"nickname":"在下風爭最高","prev_round_stamps":11,"current_round_earned":14,"current_round_used":0,"current_round_remaining":25},
+{"nickname":"在下風箏最高","prev_round_stamps":11,"current_round_earned":14,"current_round_used":0,"current_round_remaining":25},
 {"nickname":"烟鎖秦樓","prev_round_stamps":10,"current_round_earned":12,"current_round_used":0,"current_round_remaining":22},
 {"nickname":"小浣熊","prev_round_stamps":22,"current_round_earned":0,"current_round_used":0,"current_round_remaining":22},
 {"nickname":"cyannn","prev_round_stamps":10,"current_round_earned":11,"current_round_used":0,"current_round_remaining":21},

@@ -10,7 +10,7 @@ const ConsumeDataManager = {
                 {bidder: "xyy", item: "单人拍立得-小卡妆造", price: 5},
                 {bidder: "xyy", item: "单人拍立得-小卡妆造", price:5},
              //   {bidder: "羽羊", item: "单人拍立得-小卡妆造", price:1},
-             //   {bidder: "狼", item: "双人拍立得-小卡妆造 with.翼风", price:2},
+             //   {bidder: "狼", item: "双人拍立得-小卡妆造 with.诅咒", price:2},
             ]
         },
         "第三轮拍卖": {
