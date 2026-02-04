@@ -403,7 +403,7 @@
     .stat-info {
         padding-right: 12px;
         font-size: 11px;
-        text-align: center;
+        text-align: right;
     }
     
     .title-stats-info {
@@ -417,7 +417,7 @@
     .participation-info {
         padding-right: 12px;
         font-size: 11px;
-        text-align: right;
+        text-align: center;
     }
     
     /* 移动端调整最新轮提示大小 */
