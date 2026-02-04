@@ -106,6 +106,7 @@ const ConsumeDataManager = {
         // }
     },
 
+
     // 获取所有时间段
     getPeriods: function() {
         return Object.keys(this.data);
@@ -156,35 +157,55 @@ const ConsumeDataManager = {
         const periods = this.getPeriods();
         return periods.length > 0 ? periods[0] : null;
     },
-    
+
     // 获取最新时间段
     getLatestPeriod: function() {
         const periods = this.getPeriods();
         if (periods.length === 0) return null;
-        // 按时间排序，最新的时间段排在最后
+
+        // 排序逻辑优化
         periods.sort((a, b) => {
-            // 按拍卖轮次排序，数字大的排在前面
             const getRoundNumber = (str) => {
                 const match = str.match(/第(.+?)轮拍卖/);
-                if (match) {
-                    const roundText = match[1];
-                    if (roundText === "一") return 1;
-                    if (roundText === "二") return 2;
-                    if (roundText === "三") return 3;
-                    if (roundText === "四") return 4;
-                    if (roundText === "五") return 5;
-                    if (roundText === "六") return 6;
-                    if (roundText === "七") return 7;
-                    if (roundText === "八") return 8;
-                    if (roundText === "九") return 9;
-                    // 如果是数字形式
-                    return parseInt(roundText) || 0;
-                }
-                return 0;
+                if (!match) return 0;
+
+                const roundText = match[1];
+
+                // 动态解析中文数字
+                const parseChineseNumber = (text) => {
+                    const units = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+                    const tens = ["", "十"];
+
+                    let result = 0;
+
+                    // 处理“十”开头的情况（如“十一”、“十二”）
+                    if (text.startsWith("十")) {
+                        result += 10;
+                        text = text.slice(1); // 去掉“十”
+                    }
+
+                    // 分别处理十位和个位
+                    for (let i = 0; i < text.length; i++) {
+                        const char = text[i];
+                        const unitIndex = units.indexOf(char);
+                        const tenIndex = tens.indexOf(char);
+
+                        if (unitIndex !== -1) {
+                            result += unitIndex;
+                        } else if (tenIndex !== -1 && i === 0) {
+                            result += tenIndex * 10;
+                        }
+                    }
+
+                    return result || parseInt(text) || 0;
+                };
+
+                return parseChineseNumber(roundText);
             };
-            return getRoundNumber(b) - getRoundNumber(a);
+
+            return getRoundNumber(b) - getRoundNumber(a); // 降序排列
         });
+
         return periods[0]; // 返回最新的时间段
     }
-
 };
