@@ -289,7 +289,7 @@ function displaySearchResults(results) {
                             </div>
                         `).join('')}
                     </div>
-                    <span style="font-size: 12px; color: #888; cursor: help;">鼠标悬停查看消费详情</span>
+                    <span style="font-size: 12px; color: #888; cursor: help;">悬停查看消费详情</span>
                 </div>` : ''}
             </li>
         `;
