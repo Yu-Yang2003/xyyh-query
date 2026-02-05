@@ -399,11 +399,11 @@
         margin-bottom: 10px;
     }
     
-    /* 移动端调整统计信息位置和大小 */
+    /* 移动端调整拍卖时间显示 */
     .stat-info {
         padding-right: 12px;
         font-size: 11px;
-        text-align: center;
+        text-align: right;
     }
     
     .title-stats-info {
@@ -522,4 +522,5 @@
 /* 为移动端增加触摸反馈 */
 .consume-table tbody tr:active {
     background-color: #e3f2fd;
+
 }
