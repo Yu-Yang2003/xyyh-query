@@ -522,5 +522,4 @@
 /* 为移动端增加触摸反馈 */
 .consume-table tbody tr:active {
     background-color: #e3f2fd;
-
 }

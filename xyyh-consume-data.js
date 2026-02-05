@@ -206,5 +206,19 @@ const ConsumeDataManager = {
         });
 
         return periods[0]; // 返回最新的时间段
+    },
+
+    // 新增方法：根据昵称查找用户（不区分大小写）
+    findUserByNickname: function(nickname) {
+        const lowerNickname = nickname.toLowerCase(); // 将输入昵称转为小写
+        for (const period in this.data) {
+            const records = this.data[period].records;
+            for (const record of records) {
+                if (record.bidder.toLowerCase() === lowerNickname) {
+                    return record; // 找到匹配项则返回
+                }
+            }
+        }
+        return null; // 未找到匹配项
     }
 };

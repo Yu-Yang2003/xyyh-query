@@ -351,6 +351,11 @@ const stampData = [
 {"nickname": "xyy", "prev_round_stamps": 1000, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1000}
 ];
 
+// 预处理：为每个用户添加小写昵称字段
+stampData.forEach(user => {
+    user.nickname_lower = user.nickname.toLowerCase();
+});
+
 // 导出数据以供其他文件使用
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = stampData;
