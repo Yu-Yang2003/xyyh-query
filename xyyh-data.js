@@ -374,7 +374,8 @@ const stampData = [
 {"nickname":"疯小伙","prev_round_stamps":0,"current_round_earned":1,"current_round_used":0,"current_round_remaining":1},
 {"nickname":"黑豆豆奶","prev_round_stamps":0,"current_round_earned":1,"current_round_used":0,"current_round_remaining":1},
 {"nickname":"会发光的溜溜酱","prev_round_stamps":0,"current_round_earned":1,"current_round_used":0,"current_round_remaining":1},
-  {"nickname": "xyy", "prev_round_stamps": 1000, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1000}
+{"nickname":"小吊梨湯","prev_round_stamps":0,"current_round_earned":3,"current_round_used":0,"current_round_remaining":3},
+{"nickname": "xyy", "prev_round_stamps": 1000, "current_round_earned": 0, "current_round_used": 0, "current_round_remaining": 1000}
 ];
 
 // 预处理：为每个用户添加小写昵称字段
