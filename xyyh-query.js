@@ -1,6 +1,6 @@
 // ==================== 印花数据现在从外部文件导入 ====================
 
-// 消费记录数据 - 从外部数据源获取，不需要定义本地的consumeData数组
+// 消费记录数据 - 从外部数据源获取，不需要定义本地的 consumeData 数组
 // 更新印花数据中的消费记录 - 使用外部数据源的数据
 function updateStampDataWithConsumeRecords() {
     // 重置所有用户的本轮消费记录
@@ -8,7 +8,7 @@ function updateStampDataWithConsumeRecords() {
         user.current_round_used = 0;
     });
 
-    // 使用ConsumeDataManager获取最新的消费记录
+    // 使用 ConsumeDataManager 获取最新的消费记录
     if (typeof ConsumeDataManager !== 'undefined') {
         const latestPeriod = ConsumeDataManager.getLatestPeriod();
         if(latestPeriod) {
@@ -32,7 +32,7 @@ function updateStampDataWithConsumeRecords() {
 // 初始化时更新数据
 updateStampDataWithConsumeRecords(); // 取消注释以启用此功能
 
-// DOM元素
+// DOM 元素
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const resultsContainer = document.getElementById('resultsContainer');
@@ -85,7 +85,7 @@ const traditionalToSimplified = {
                 '單': '单', '獸': '兽', '漢': '汉', '號': '号', '箏': '筝'
 };
 
-// 防止XSS攻击的函数
+// 防止 XSS 攻击的函数
 function escapeHtml(text) {
     if(typeof text !== 'string') {
         return '';
@@ -135,27 +135,40 @@ function calculateUserConsumption() {
 }
 
 // 更新印花数据中的消费记录 - 已改为使用外部数据源
+// 修改：增加数据校验，若不匹配则按计算值更新
 function updateStampDataWithConsumeRecords() {
     // 计算最新时间段的消费记录
     const consumptionMap = calculateUserConsumption();
     
-    // 重置所有用户的本轮消费记录
-    stampData.forEach(user => {
-        user.current_round_used = 0;
-    });
+    let updateCount = 0; // 记录更新的用户数量
     
     // 根据消费记录更新用户的印花消费量
-    for (const [bidder, totalConsumption] of Object.entries(consumptionMap)) {
+    for (const [bidder, calculatedConsumption] of Object.entries(consumptionMap)) {
         const userIndex = stampData.findIndex(user => user.nickname === bidder);
         if (userIndex !== -1) {
-            // 设置该用户的消费记录
-            stampData[userIndex].current_round_used = totalConsumption;
-            // 重新计算剩余印花
-            stampData[userIndex].current_round_remaining = 
-                stampData[userIndex].prev_round_stamps + 
-                stampData[userIndex].current_round_earned - 
-                stampData[userIndex].current_round_used;
+            const user = stampData[userIndex];
+            const existingConsumption = user.current_round_used;
+            
+            // 校验：若现有数据与计算值不匹配，则更新
+            if (existingConsumption !== calculatedConsumption) {
+                console.log(`[数据校正] 用户 ${bidder}: 原消费 ${existingConsumption} -> 计算消费 ${calculatedConsumption}`);
+                
+                // 更新消费记录
+                user.current_round_used = calculatedConsumption;
+                
+                // 重新计算剩余印花
+                user.current_round_remaining = 
+                    user.prev_round_stamps + 
+                    user.current_round_earned - 
+                    user.current_round_used;
+                
+                updateCount++;
+            }
         }
+    }
+    
+    if (updateCount > 0) {
+        console.log(`[数据校正完成] 共更新 ${updateCount} 个用户的印花数据`);
     }
 }
 
@@ -174,7 +187,7 @@ function searchUsers() {
     }
 
     if (nickname.length < 1) {
-        showError('查询关键词至少需要1个字符');
+        showError('查询关键词至少需要 1 个字符');
         return;
     }
 
@@ -273,9 +286,9 @@ function displaySearchResults(results) {
             <li class="user-item" onclick="showUserDetailByNickname('${escapeHtml(user.nickname)}')" role="option" tabindex="0" aria-selected="false">
                 <strong>${escapeHtml(simplifiedNickname)}</strong>
                 <div style="margin-top: 5px; font-size: 14px; color: #666;">
-                    剩余印花: <span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
-                    本轮获得: <span style="color: #4CAF50;">${user.current_round_earned}</span>` +
-                    (hasConsumption ? ` | 本轮消费: <span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span>` : '') +
+                    剩余印花：<span style="color: #764ba2; font-weight: bold;">${user.current_round_remaining}</span> |
+                    本轮获得：<span style="color: #4CAF50;">${user.current_round_earned}</span>` +
+                    (hasConsumption ? ` | 本轮消费：<span style="color: #ff6b6b; font-weight: bold;">${user.current_round_used}</span>` : '') +
                     `
                 </div>
                 ${hasConsumption ? `
@@ -440,7 +453,7 @@ closeDetail.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', function() {
     searchInput.focus();
 
-    // 添加ESC键关闭详情功能
+    // 添加 ESC 键关闭详情功能
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             // 关闭详情面板
@@ -471,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// 将函数暴露给全局作用域，供onclick使用
+// 将函数暴露给全局作用域，供 onclick 使用
 window.showUserDetailByNickname = showUserDetailByNickname;
 window.showConsumePopup = showConsumePopup;  // 取消注释以启用此功能
 window.hideConsumePopup = hideConsumePopup;  // 取消注释以启用此功能
