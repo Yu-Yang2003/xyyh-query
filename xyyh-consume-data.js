@@ -3,14 +3,14 @@ const ConsumeDataManager = {
     // 按时间段组织的消费记录数据
     // 【录入最新数据的位置】在这里添加新的时间段和数据
     data: {
-       /* "第五轮拍卖": {
-            statsRange: "2026年2月 ~ 2026年4月", // 【需要录入拍卖的统计范围】
-            auctionTime: "2026年1月10日", // 【需要录入拍卖时间】
+       "第五轮拍卖": {
+            statsRange: "2026年3月 ~ 2026年5月", // 【需要录入拍卖的统计范围】
+            auctionTime: "2026年6月X日", // 【需要录入拍卖时间】
             records: [
-                {bidder: "狼", item: "单人拍立得-小卡妆造", price: 5},
-                {bidder: "羽羊", item: "单人拍立得-小卡妆造", price:5}
+                {bidder: "xyy", item: "单人拍立得-小卡妆造", price: 5},
+                {bidder: "xyy", item: "单人拍立得-小卡妆造", price:5}
             ]
-        },*/
+        },
         "第四轮拍卖": {
             statsRange: "2025年11月 ~ 2026年2月", // 【需要录入拍卖的统计范围】
             auctionTime: "2026年3月14日", // 【需要录入拍卖时间】
